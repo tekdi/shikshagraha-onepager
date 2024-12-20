@@ -1,64 +1,63 @@
 <div class="registration-container">
-    <h2>Registration Form</h2>
-    <form #registrationForm="ngForm" (ngSubmit)="onSubmit()">
-      <div>
-        <label for="name">Name</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          [(ngModel)]="user.name"
-          required
-        />
-      </div>
-  
-      <div>
-        <label for="dob">Date of Birth</label>
-        <input
-          type="date"
-          id="dob"
-          name="dob"
-          [(ngModel)]="user.dob"
-          required
-        />
-      </div>
-  
-      <div>
-        <label for="email">Email ID</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          [(ngModel)]="user.email"
-          required
-        />
-      </div>
-  
-      <div>
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          [(ngModel)]="user.password"
-          required
-        />
-      </div>
-  
-      <div>
-        <label for="udise">UDISE Code</label>
-        <input
-          type="text"
-          id="udise"
-          name="udise"
-          [(ngModel)]="user.udise"
-          required
-        />
-      </div>
-  
-      <button type="submit" [disabled]="!registrationForm.form.valid">
-        Register
-      </button>
-    </form>
-  </div>
-  
+  <h2>Registration Form</h2>
+  <form #registrationForm="ngForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="name">Name</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        [(ngModel)]="user.name"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="dob">Date of Birth</label>
+      <input
+        type="date"
+        id="dob"
+        name="dob"
+        [(ngModel)]="user.dob"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="email">Email ID</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        [(ngModel)]="user.email"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        [(ngModel)]="user.password"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="udise">UDISE Code</label>
+      <input
+        type="text"
+        id="udise"
+        name="udise"
+        [(ngModel)]="user.udise"
+        required
+      />
+    </div>
+
+    <button type="submit" [disabled]="!registrationForm.form.valid">
+      Register
+    </button>
+  </form>
+</div>

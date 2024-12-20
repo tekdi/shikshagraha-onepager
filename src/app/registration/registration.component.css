@@ -1,57 +1,60 @@
-/* Center the form on the page */
+/* Container styling */
 .registration-container {
-    max-width: 500px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Headings */
-  .registration-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-    font-family: Arial, sans-serif;
-  }
-  
-  /* Form elements */
-  .registration-container label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
-  }
-  
-  .registration-container input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-  
-  /* Button */
-  .registration-container button {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .registration-container button:disabled {
-    background-color: #aaa;
-  }
-  
-  .registration-container button:hover:not(:disabled) {
-    background-color: #0056b3;
-  }
-  
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #ffffff; /* White background for the form */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* To ensure proper border-radius */
+}
+
+/* Header background color */
+.registration-container h2 {
+  margin: 0 -20px 20px -20px; /* Extend the header background to match container edges */
+  padding: 15px 20px;
+  color: #ffffff; /* White text */
+  background-color: #FF9911; /* Specified background color */
+  text-align: center;
+  font-family: Arial, sans-serif;
+  border-radius: 8px 8px 0 0; /* Rounded top corners */
+}
+
+/* Input fields */
+.registration-container input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Labels */
+.registration-container label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+/* Button styling */
+.registration-container button {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  color: white;
+  background-color: #572E91; /* Button color */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.registration-container button:hover:not(:disabled) {
+  background-color: #e67e00; /* Slightly darker shade for hover effect */
+}
+
+.registration-container button:disabled {
+  background-color: #aaa;
+}
