@@ -1,24 +1,28 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {  FormsModule, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-registration',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule], // Ensure both are included
   templateUrl: './registration.component.html',
-  styleUrl: './registration.component.css'
+  styleUrls: ['./registration.component.css'] // Correct file name
 })
 export class RegistrationComponent {
-  user = {
-    name: '',
-    dob: '',
-    email: '',
-    password: '',
-    udise: ''
-  };
+  registrationForm;
+  
+  constructor(private fb: FormBuilder) {
+    this.registrationForm = this.fb.group({
+      name: ['', [Validators.required]],
+      dob: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8),Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)]],
+      udise: ['', [Validators.required]]
+    });
+  }
 
   onSubmit() {
-    console.log('Form submitted:', this.user);
-    // You can add further logic to handle form submission like API calls here
+    console.log('Form submitted:', this.registrationForm);
   }
 }

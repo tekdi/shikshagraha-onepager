@@ -52,9 +52,13 @@
 }
 
 .registration-container button:hover:not(:disabled) {
-  background-color: #e67e00; /* Slightly darker shade for hover effect */
+  background-color: #572E91; /* Slightly darker shade for hover effect */
 }
 
 .registration-container button:disabled {
   background-color: #aaa;
+}
+
+.error {
+  color: red;
 }
