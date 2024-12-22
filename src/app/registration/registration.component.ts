@@ -59,18 +59,20 @@ export class RegistrationComponent {
   }
 
   async fetchLocationData() {
+    console.log("this.registrationForm.get('udise')",this.registrationForm.get('udise')?.value)
+    const code =this.registrationForm.get('udise')?.value
     try {
       const initialPayload = {
         request: {
           filters: {
-            code: this.registrationForm.get('udise'),
+            code: code,
             type: 'school'
           }
         }
       };
 
       const headers = new HttpHeaders({
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI5dndaeklzS3U0ZzRjSWxoZnE1MWQ2SlR1d0w4dktlZCJ9.4jPaZhi9dHMzqqoZAZvfD5t5QPAVAuWOr9SDf1apZb8',
+        Authorization: '',
         'Content-Type': 'application/json'
       });
 
