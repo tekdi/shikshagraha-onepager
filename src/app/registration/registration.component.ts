@@ -14,6 +14,7 @@ export class RegistrationComponent {
   registrationForm;
   passwordVisible: boolean = false;
   isSubRoleEnabled: boolean = false;
+  officialRoles = ['CRM', 'HM', 'AAA'];
 
   constructor(private fb: FormBuilder) {
     this.registrationForm = this.fb.group({

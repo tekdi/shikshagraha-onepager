@@ -115,9 +115,7 @@
         required
       >
         <option value="" disabled>Select Sub User Role</option>
-        <option value="Teacher">Teacher</option>
-        <option value="Youth">Youth</option>
-        <option value="HT & Official">HT & Official</option>
+        <option *ngFor="let role of officialRoles" [value]="role">{{ role }}</option>
       </select>
     </div>
 
