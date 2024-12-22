@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 })
 export class RegistrationComponent {
   registrationForm;
+  passwordVisible: boolean = false;
   
   constructor(private fb: FormBuilder) {
     this.registrationForm = this.fb.group({

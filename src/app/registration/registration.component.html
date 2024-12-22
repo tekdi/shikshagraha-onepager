@@ -56,15 +56,55 @@
     </div>
 
     <!-- Password Field -->
-    <div>
+    <!-- <div>
       <label for="password">Password</label>
       <input
-        type="password"
+        [type]="passwordVisible ? 'text' : 'password'"
         id="password"
         name="password"
         formControlName="password"
         required
       />
+      <div>
+        <input
+          type="checkbox"
+          id="showPassword"
+          [(ngModel)]="passwordVisible"
+        />
+        <label for="showPassword">Show Password</label>
+      </div>
+      <div *ngIf="registrationForm.get('password')?.touched && registrationForm.get('password')?.invalid">
+        <small class="error" *ngIf="registrationForm.get('password')?.errors?.['required']">
+          Password is required.
+        </small>
+        <small class="error" *ngIf="registrationForm.get('password')?.errors?.['minlength']">
+          Password must be at least 8 characters long.
+        </small>
+        <small class="error" *ngIf="registrationForm.get('password')?.errors?.['pattern']">
+          Password must contain uppercase, lowercase, number, and special character.
+        </small>
+      </div>
+    </div> -->
+
+    <div>
+      <label for="password">Password</label>
+      <div class="password-container">
+        <input
+          [type]="passwordVisible ? 'text' : 'password'"
+          id="password"
+          formControlName="password"
+          required
+        />
+        <div class="checkbox-container">
+          <input
+            type="checkbox"
+            id="showPassword"
+            [(ngModel)]="passwordVisible"
+            [ngModelOptions]="{ standalone: true }"
+          />
+          <label for="showPassword">Show Password</label>
+        </div>
+      </div>
       <div *ngIf="registrationForm.get('password')?.touched && registrationForm.get('password')?.invalid">
         <small class="error" *ngIf="registrationForm.get('password')?.errors?.['required']">
           Password is required.

@@ -24,7 +24,7 @@
 .registration-container input {
   width: 100%;
   padding: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
@@ -61,4 +61,23 @@
 
 .error {
   color: red;
+}
+
+.password-container {
+  display: flex;
+  flex-direction: column; /* Stack password input and checkbox vertically */
+  align-items: flex-start; /* Align everything to the left */
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center; /* Align checkbox and label vertically */
+  gap: 0.5rem; /* Space between checkbox and label */
+  white-space: nowrap; /* Prevent line break in text */
+}
+
+
+label {
+  margin: 0;
+  padding: 0;
 }
