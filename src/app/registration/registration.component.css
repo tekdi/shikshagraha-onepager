@@ -1,7 +1,17 @@
-/* Container styling */
+/* Main container for the entire page */
+.page-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping for smaller screens */
+  gap: 20px; /* Add space between sections */
+  padding: 20px; /* Add padding around the sections */
+  justify-content: center; /* Center align the sections */
+}
+
+/* Registration container */
 .registration-container {
+  flex: 1; /* Allow it to take equal space as the data container */
+  min-width: 300px; /* Ensure it doesn't shrink too much */
   max-width: 500px;
-  margin: 50px auto;
   padding: 20px;
   border-radius: 8px;
   background-color: #ffffff; /* White background for the form */
@@ -9,7 +19,18 @@
   overflow: hidden; /* To ensure proper border-radius */
 }
 
-/* Header background color */
+/* Data container */
+.data-container {
+  flex: 1; /* Allow it to take equal space as the registration container */
+  min-width: 300px; /* Ensure it doesn't shrink too much */
+  max-width: 500px;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f8f9fa; /* Light gray background for data display */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header styling for the registration form */
 .registration-container h2 {
   margin: 0 -20px 20px -20px; /* Extend the header background to match container edges */
   padding: 15px 20px;
@@ -20,25 +41,33 @@
   border-radius: 8px 8px 0 0; /* Rounded top corners */
 }
 
-/* Input fields */
-.registration-container input {
+/* Header styling for the data container */
+.data-container h3 {
+  margin-bottom: 20px;
+  color: #333; /* Darker text for contrast */
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+/* General input and label styling */
+.registration-container input,
+.registration-container select,
+.data-container p {
   width: 100%;
   padding: 10px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
 }
 
-/* Labels */
 .registration-container label {
-  display: block;
-  margin-bottom: 5px;
   font-weight: bold;
   color: #555;
+  margin-bottom: 5px;
 }
 
-/* Button styling */
+/* Submit button */
 .registration-container button {
   width: 100%;
   padding: 10px;
@@ -52,15 +81,17 @@
 }
 
 .registration-container button:hover:not(:disabled) {
-  background-color: #572E91; /* Slightly darker shade for hover effect */
+  background-color: #451f6f; /* Darker shade for hover */
 }
 
 .registration-container button:disabled {
   background-color: #aaa;
 }
 
+/* Error message styling */
 .error {
   color: red;
+  font-size: 12px;
 }
 
 .password-container {
@@ -76,7 +107,6 @@
   white-space: nowrap; /* Prevent line break in text */
 }
 
-
 label {
   margin: 0;
   padding: 0;
@@ -90,4 +120,27 @@ label {
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
+}
+
+/* Alignment for UDISE Code input and Verify button */
+.input-button-container {
+  display: flex;
+  align-items: center; /* Align input and button vertically */
+  gap: 10px; /* Add space between the input and button */
+}
+
+.input-button-container input {
+  flex: 1; /* Input takes up available space */
+  padding: 10px; /* Consistent padding */
+  font-size: 14px; /* Font size */
+  border: 1px solid #ccc; /* Border style */
+  border-radius: 4px; /* Rounded corners */
+}
+
+.input-button-container button {
+  flex-shrink: 0; /* Prevent button from shrinking */
+  padding: 10px; /* Consistent padding */
+  font-size: 14px; /* Font size */
+  border-radius: 4px; /* Rounded corners */
+  cursor: pointer; /* Pointer on hover */
 }

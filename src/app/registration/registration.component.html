@@ -1,143 +1,163 @@
-<div class="registration-container">
-  <h2>Registration Form</h2>
-  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
-    <!-- Name Field -->
-    <div>
-      <label for="name">Name</label>
-      <input
-        type="text"
-        id="name"
-        name="name"
-        formControlName="name"
-        required
-      />
-      <div *ngIf="registrationForm.get('name')?.touched && registrationForm.get('name')?.invalid">
-        <small class="error" *ngIf="registrationForm.get('name')?.errors?.['required']">
-          Name is required.
-        </small>
-      </div>
-    </div>
-
-    <!-- Date of Birth Field -->
-    <div>
-      <label for="dob">Date of Birth</label>
-      <input
-        type="date"
-        id="dob"
-        name="dob"
-        formControlName="dob"
-        required
-      />
-      <div *ngIf="registrationForm.get('dob')?.touched && registrationForm.get('dob')?.invalid">
-        <small class="error" *ngIf="registrationForm.get('dob')?.errors?.['required']">
-          Date of Birth is required.
-        </small>
-      </div>
-    </div>
-
-    <!-- Email Field -->
-    <div>
-      <label for="email">Email ID</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        formControlName="email"
-        required
-      />
-      <div *ngIf="registrationForm.get('email')?.touched && registrationForm.get('email')?.invalid">
-        <small class="error" *ngIf="registrationForm.get('email')?.errors?.['required']">
-          Email is required.
-        </small>
-        <small class="error" *ngIf="registrationForm.get('email')?.errors?.['email']">
-          Invalid email format.
-        </small>
-      </div>
-    </div>
-
-    <!-- Password Field -->
-    <div>
-      <label for="password">Password</label>
-      <div class="password-container">
+<div class="page-container">
+  <!-- First section -->
+  <div class="registration-container">
+    <h2>Registration Form</h2>
+    <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+      <!-- Name Field -->
+      <div>
+        <label for="name">Name</label>
         <input
-          [type]="passwordVisible ? 'text' : 'password'"
-          id="password"
-          formControlName="password"
+          type="text"
+          id="name"
+          name="name"
+          formControlName="name"
           required
         />
-        <div class="checkbox-container">
-          <input
-            type="checkbox"
-            id="showPassword"
-            [(ngModel)]="passwordVisible"
-            [ngModelOptions]="{ standalone: true }"
-          />
-          <label for="showPassword">Show Password</label>
+        <div *ngIf="registrationForm.get('name')?.touched && registrationForm.get('name')?.invalid">
+          <small class="error" *ngIf="registrationForm.get('name')?.errors?.['required']">
+            Name is required.
+          </small>
         </div>
       </div>
-      <div *ngIf="registrationForm.get('password')?.touched && registrationForm.get('password')?.invalid">
-        <small class="error" *ngIf="registrationForm.get('password')?.errors?.['required']">
-          Password is required.
-        </small>
-        <small class="error" *ngIf="registrationForm.get('password')?.errors?.['minlength']">
-          Password must be at least 8 characters long.
-        </small>
-        <small class="error" *ngIf="registrationForm.get('password')?.errors?.['pattern']">
-          Password must contain uppercase, lowercase, number, and special character.
-        </small>
+  
+      <!-- Date of Birth Field -->
+      <div>
+        <label for="dob">Date of Birth</label>
+        <input
+          type="date"
+          id="dob"
+          name="dob"
+          formControlName="dob"
+          required
+        />
+        <div *ngIf="registrationForm.get('dob')?.touched && registrationForm.get('dob')?.invalid">
+          <small class="error" *ngIf="registrationForm.get('dob')?.errors?.['required']">
+            Date of Birth is required.
+          </small>
+        </div>
       </div>
-    </div>
-
-    <!-- User Role Field -->
-    <div>
-      <label for="userRole">User Role</label>
-      <select id="userRole" name="userRole" formControlName="userRole" (change)="onUserRoleChange()" required>
-        <option value="" disabled>Select User Role</option>
-        <option value="Teacher">Teacher</option>
-        <option value="Youth">Youth</option>
-        <option value="HT & Official">HT & Official</option>
-      </select>
-      <div *ngIf="registrationForm.get('userRole')?.touched && registrationForm.get('userRole')?.invalid">
-        <small class="error" *ngIf="registrationForm.get('userRole')?.errors?.['required']">
-          User Role is required.
-        </small>
+  
+      <!-- Email Field -->
+      <div>
+        <label for="email">Email ID</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          formControlName="email"
+          required
+        />
+        <div *ngIf="registrationForm.get('email')?.touched && registrationForm.get('email')?.invalid">
+          <small class="error" *ngIf="registrationForm.get('email')?.errors?.['required']">
+            Email is required.
+          </small>
+          <small class="error" *ngIf="registrationForm.get('email')?.errors?.['email']">
+            Invalid email format.
+          </small>
+        </div>
       </div>
-    </div>
-
-    <!-- Sub User Role Field (conditionally enabled) -->
-    <div>
-      <label for="subUserRole">Sub User Role</label>
-      <select
-        id="subUserRole"
-        name="subUserRole"
-        formControlName="subUserRole"
-        [disabled]="!isSubRoleEnabled"
-        required
-      >
-        <option value="" disabled>Select Sub User Role</option>
-        <option *ngFor="let role of officialRoles" [value]="role">{{ role }}</option>
-      </select>
-    </div>
-
-    <!-- UDISE Code Field -->
-    <div>
-      <label for="udise">UDISE Code</label>
-      <input
-        type="number"
-        id="udise"
-        name="udise"
-        formControlName="udise"
-        required
-      />
-      <div *ngIf="registrationForm.get('udise')?.touched && registrationForm.get('udise')?.invalid">
-        <small class="error" *ngIf="registrationForm.get('udise')?.errors?.['required']">
-          UDISE code is required.
-        </small>
+  
+      <!-- Password Field -->
+      <div>
+        <label for="password">Password</label>
+        <div class="password-container">
+          <input
+            [type]="passwordVisible ? 'text' : 'password'"
+            id="password"
+            formControlName="password"
+            required
+          />
+          <div class="checkbox-container">
+            <input
+              type="checkbox"
+              id="showPassword"
+              [(ngModel)]="passwordVisible"
+              [ngModelOptions]="{ standalone: true }"
+            />
+            <label for="showPassword">Show Password</label>
+          </div>
+        </div>
+        <div *ngIf="registrationForm.get('password')?.touched && registrationForm.get('password')?.invalid">
+          <small class="error" *ngIf="registrationForm.get('password')?.errors?.['required']">
+            Password is required.
+          </small>
+          <small class="error" *ngIf="registrationForm.get('password')?.errors?.['minlength']">
+            Password must be at least 8 characters long.
+          </small>
+          <small class="error" *ngIf="registrationForm.get('password')?.errors?.['pattern']">
+            Password must contain uppercase, lowercase, number, and special character.
+          </small>
+        </div>
       </div>
-    </div>
+  
+      <!-- User Role Field -->
+      <div>
+        <label for="userRole">User Role</label>
+        <select id="userRole" name="userRole" formControlName="userRole" (change)="onUserRoleChange()" required>
+          <option value="" disabled>Select User Role</option>
+          <option value="Teacher">Teacher</option>
+          <option value="Youth">Youth</option>
+          <option value="HT & Official">HT & Official</option>
+        </select>
+        <div *ngIf="registrationForm.get('userRole')?.touched && registrationForm.get('userRole')?.invalid">
+          <small class="error" *ngIf="registrationForm.get('userRole')?.errors?.['required']">
+            User Role is required.
+          </small>
+        </div>
+      </div>
+  
+      <!-- Sub User Role Field (conditionally enabled) -->
+      <div>
+        <label for="subUserRole">Sub User Role</label>
+        <select
+          id="subUserRole"
+          name="subUserRole"
+          formControlName="subUserRole"
+          [disabled]="!isSubRoleEnabled"
+          required
+        >
+          <option value="" disabled>Select Sub User Role</option>
+          <option *ngFor="let role of officialRoles" [value]="role">{{ role }}</option>
+        </select>
+      </div>
+  
+      <!-- UDISE Code Field -->
+      <div>
+        <label for="udise">UDISE Code</label>
+        <div class="input-button-container">
+          <input
+            type="number"
+            id="udise"
+            name="udise"
+            formControlName="udise"
+            required
+          />
+          <button class="btn btn-primary btn-sm" (click)="fetchLocationData()" style="width: 100px;">
+            Verify
+          </button>
+        </div>
+        <div *ngIf="registrationForm.get('udise')?.touched && registrationForm.get('udise')?.invalid">
+          <small class="error" *ngIf="registrationForm.get('udise')?.errors?.['required']">
+            UDISE code is required.
+          </small>
+        </div>
+      </div>      
+  
+      <button type="submit" [disabled]="registrationForm.invalid">
+        Register
+      </button>
+    </form>
+  </div>
 
-    <button type="submit" [disabled]="registrationForm.invalid">
-      Register
-    </button>
-  </form>
+  <!-- Second Section: Display Data -->
+  <div class="data-container">
+    <h3>Location Data</h3>
+    <div *ngIf="locationdata">
+      <p><strong>State Name:</strong> {{ locationdata.state?.name }}</p>
+      <p><strong>District Name:</strong> {{ locationdata.district?.name }}</p>
+      <p><strong>Block Name:</strong> {{ locationdata.block?.name }}</p>
+      <p><strong>Cluster Name:</strong> {{ locationdata.cluster?.name }}</p>
+      <p><strong>School Name:</strong> {{ locationdata.school?.name }}</p>
+    </div>
+  </div>
 </div>
