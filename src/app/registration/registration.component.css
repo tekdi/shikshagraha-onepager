@@ -81,3 +81,13 @@ label {
   margin: 0;
   padding: 0;
 }
+
+/* Input fields */
+.registration-container select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}

@@ -56,36 +56,6 @@
     </div>
 
     <!-- Password Field -->
-    <!-- <div>
-      <label for="password">Password</label>
-      <input
-        [type]="passwordVisible ? 'text' : 'password'"
-        id="password"
-        name="password"
-        formControlName="password"
-        required
-      />
-      <div>
-        <input
-          type="checkbox"
-          id="showPassword"
-          [(ngModel)]="passwordVisible"
-        />
-        <label for="showPassword">Show Password</label>
-      </div>
-      <div *ngIf="registrationForm.get('password')?.touched && registrationForm.get('password')?.invalid">
-        <small class="error" *ngIf="registrationForm.get('password')?.errors?.['required']">
-          Password is required.
-        </small>
-        <small class="error" *ngIf="registrationForm.get('password')?.errors?.['minlength']">
-          Password must be at least 8 characters long.
-        </small>
-        <small class="error" *ngIf="registrationForm.get('password')?.errors?.['pattern']">
-          Password must contain uppercase, lowercase, number, and special character.
-        </small>
-      </div>
-    </div> -->
-
     <div>
       <label for="password">Password</label>
       <div class="password-container">
@@ -116,6 +86,39 @@
           Password must contain uppercase, lowercase, number, and special character.
         </small>
       </div>
+    </div>
+
+    <!-- User Role Field -->
+    <div>
+      <label for="userRole">User Role</label>
+      <select id="userRole" name="userRole" formControlName="userRole" (change)="onUserRoleChange()" required>
+        <option value="" disabled>Select User Role</option>
+        <option value="Teacher">Teacher</option>
+        <option value="Youth">Youth</option>
+        <option value="HT & Official">HT & Official</option>
+      </select>
+      <div *ngIf="registrationForm.get('userRole')?.touched && registrationForm.get('userRole')?.invalid">
+        <small class="error" *ngIf="registrationForm.get('userRole')?.errors?.['required']">
+          User Role is required.
+        </small>
+      </div>
+    </div>
+
+    <!-- Sub User Role Field (conditionally enabled) -->
+    <div>
+      <label for="subUserRole">Sub User Role</label>
+      <select
+        id="subUserRole"
+        name="subUserRole"
+        formControlName="subUserRole"
+        [disabled]="!isSubRoleEnabled"
+        required
+      >
+        <option value="" disabled>Select Sub User Role</option>
+        <option value="Teacher">Teacher</option>
+        <option value="Youth">Youth</option>
+        <option value="HT & Official">HT & Official</option>
+      </select>
     </div>
 
     <!-- UDISE Code Field -->
