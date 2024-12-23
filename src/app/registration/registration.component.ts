@@ -24,6 +24,11 @@ export class RegistrationComponent {
   isSubRoleEnabled: boolean = false;
   officialRoles = ['CRM', 'HM', 'AAA'];
   locationdata: any;
+  selectedSubRoles: { [key: string]: boolean } = {
+    crm: false,
+    hm: false,
+    aaa: false
+  };
 
   constructor(private fb: FormBuilder, private httpClient: HttpClient) {
     this.registrationForm = this.fb.group({
@@ -39,28 +44,29 @@ export class RegistrationComponent {
         ],
       ],
       userRole: ['', [Validators.required]],
-      subUserRole: [{ value: '', disabled: true }, [Validators.required]],
+      subUserRole: [{ value: <string[]>[], disabled: true }, [Validators.required]],
       udise: ['', [Validators.required]],
     });
   }
 
-  onSubmit() {
-    console.log('Form submitted:', this.registrationForm.value);
-  }
-
-  onUserRoleChange() {
+  // This method is triggered when the userRole is changed
+  onUserRoleChange(): void {
     const userRole = this.registrationForm.get('userRole')?.value;
     if (userRole === 'HT & Official') {
-      this.registrationForm.get('subUserRole')?.enable(); // Enable the dropdown
+      this.isSubRoleEnabled = true; // Enable Sub User Roles if "HT & Official" is selected
     } else {
-      this.registrationForm.get('subUserRole')?.disable(); // Disable the dropdown
-      this.registrationForm.get('subUserRole')?.reset(); // Reset the value
+      this.isSubRoleEnabled = false; // Hide Sub User Roles for other user roles
+      this.selectedSubRoles = {}; // Clear selected sub roles when hiding the checkboxes
     }
   }
 
+  // This method updates the selectedSubRoles when a checkbox is checked/unchecked
+  onCheckboxChange(role: string): void {
+    const rolesArray = Object.keys(this.selectedSubRoles).filter(roleKey => this.selectedSubRoles[roleKey]);
+  }
+
   async fetchLocationData() {
-    console.log("this.registrationForm.get('udise')",this.registrationForm.get('udise')?.value)
-    const code =this.registrationForm.get('udise')?.value
+    const code = this.registrationForm.get('udise')?.value;
     try {
       const initialPayload = {
         request: {
@@ -72,7 +78,7 @@ export class RegistrationComponent {
       };
 
       const headers = new HttpHeaders({
-        Authorization: '',
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI5dndaeklzS3U0ZzRjSWxoZnE1MWQ2SlR1d0w4dktlZCJ9.4jPaZhi9dHMzqqoZAZvfD5t5QPAVAuWOr9SDf1apZb8',
         'Content-Type': 'application/json'
       });
 
@@ -119,4 +125,84 @@ export class RegistrationComponent {
   getotp() {}
 
   verifyotp() {}
+
+  onSubmit() {
+    this.fetchLocationData().then(() => {
+      const requestData = this.prepareRequestData();
+      this.submitData(requestData);
+    });
+  }
+
+  prepareRequestData() {
+    const name = this.registrationForm.get('name')?.value || ''; // Default to an empty string if 'name' is null/undefined
+    const nameParts = name.split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
+
+    const dob = this.registrationForm.get('dob')?.value; // Get the date value
+  
+    const profileLocation = [
+      this.locationdata.state,
+      this.locationdata.district,
+      this.locationdata.block,
+      this.locationdata.cluster,
+      this.locationdata.school
+    ].filter(Boolean); // Remove any undefined/null values
+
+    let userTypes: { type: string, subType: string }[] = [];
+    const userRole = this.registrationForm.get('userRole')?.value ?? ''; 
+
+    if (userRole === 'HT & Official') {
+      Object.keys(this.selectedSubRoles).forEach(role => {
+        if (this.selectedSubRoles[role]) {
+          userTypes.push({
+            type: userRole,
+            subType: role
+          });
+        }
+      });
+    } else {
+      if (userRole === 'Youth' || userRole === 'Teacher') {
+        userTypes.push({
+          type: userRole,
+          subType: ''
+        });
+      }
+    }
+    return {
+      request: {
+        usercreate: {
+          firstName,
+          lastName,
+          organisationId: '01406407969375027211',
+          email: this.registrationForm.get('email')?.value,
+          emailVerified: true,
+          userName: firstName.toLowerCase(),
+          password: this.registrationForm.get('password')?.value,
+          dob: dob ? dob.split('-')[0] : '', // Extract year from DOB
+          roles: ['PUBLIC']
+        },
+        profileLocation,
+        profileUserTypes: [{ type: userTypes }]
+      }
+    };
+  }
+
+  submitData(requestData: any) {
+    const headers = new HttpHeaders({
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI5dndaeklzS3U0ZzRjSWxoZnE1MWQ2SlR1d0w4dktlZCJ9.4jPaZhi9dHMzqqoZAZvfD5t5QPAVAuWOr9SDf1apZb8',
+      'Content-Type': 'application/json'
+    });    
+    console.log("requestData", requestData);
+
+    this.httpClient
+      .post(urlConstants.API_URLS.SUBMIT_USER_DATA, requestData, { headers })
+      .pipe(catchError(error => {
+        console.error('Error submitting data:', error);
+        throw error;
+      }))
+      .subscribe(response => {
+        console.log('User data submitted successfully:', response);
+      });
+  }
 }

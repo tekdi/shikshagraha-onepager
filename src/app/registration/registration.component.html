@@ -105,21 +105,47 @@
           </small>
         </div>
       </div>
-  
+
       <!-- Sub User Role Field (conditionally enabled) -->
-      <div>
-        <label for="subUserRole">Sub User Role</label>
-        <select
-          id="subUserRole"
-          name="subUserRole"
-          formControlName="subUserRole"
-          [disabled]="!isSubRoleEnabled"
-          required
-        >
-          <option value="" disabled>Select Sub User Role</option>
-          <option *ngFor="let role of officialRoles" [value]="role">{{ role }}</option>
-        </select>
+      <div *ngIf="isSubRoleEnabled">
+        <div class="password-container">
+          <label>Select Sub User Role</label>
+          
+          <div class="checkbox-container">
+            <input
+              type="checkbox"
+              id="crm"
+              [(ngModel)]="selectedSubRoles['crm']"
+              (change)="onCheckboxChange('crm')"
+              [ngModelOptions]="{ standalone: true }"
+            />
+            <p for="crm">CRM</p>
+          </div>
+
+          <div class="checkbox-container">
+            <input
+              type="checkbox"
+              id="hm"
+              [(ngModel)]="selectedSubRoles['hm']"
+              (change)="onCheckboxChange('hm')"
+              [ngModelOptions]="{ standalone: true }"
+            />
+            <p for="hm">HM</p>
+          </div>
+
+          <div class="checkbox-container">
+            <input
+              type="checkbox"
+              id="aaa"
+              [(ngModel)]="selectedSubRoles['aaa']"
+              (change)="onCheckboxChange('aaa')"
+              [ngModelOptions]="{ standalone: true }"
+            />
+            <p for="aaa">AAA</p>
+          </div>
+        </div>
       </div>
+
   
       <!-- UDISE Code Field -->
       <div>
@@ -143,7 +169,7 @@
         </div>
       </div>      
   
-      <button type="submit" [disabled]="registrationForm.invalid">
+      <button type="submit" [disabled]="registrationForm.invalid" (click)="onSubmit()">
         Register
       </button>
     </form>
