@@ -108,44 +108,24 @@
 
       <!-- Sub User Role Field (conditionally enabled) -->
       <div *ngIf="isSubRoleEnabled">
-        <div class="password-container">
+        <div class="sub-role-container">
           <label>Select Sub User Role</label>
-          
-          <div class="checkbox-container">
-            <input
-              type="checkbox"
-              id="crm"
-              [(ngModel)]="selectedSubRoles['crm']"
-              (change)="onCheckboxChange('crm')"
-              [ngModelOptions]="{ standalone: true }"
-            />
-            <p for="crm">CRM</p>
-          </div>
-
-          <div class="checkbox-container">
-            <input
-              type="checkbox"
-              id="hm"
-              [(ngModel)]="selectedSubRoles['hm']"
-              (change)="onCheckboxChange('hm')"
-              [ngModelOptions]="{ standalone: true }"
-            />
-            <p for="hm">HM</p>
-          </div>
-
-          <div class="checkbox-container">
-            <input
-              type="checkbox"
-              id="aaa"
-              [(ngModel)]="selectedSubRoles['aaa']"
-              (change)="onCheckboxChange('aaa')"
-              [ngModelOptions]="{ standalone: true }"
-            />
-            <p for="aaa">AAA</p>
-          </div>
+    
+          <select
+            multiple
+            formControlName="subUserRole"
+            class="multi-select-dropdown"
+            (change)="getSelectedSubRoles()"
+          >
+            <option *ngFor="let role of officialRoles" [value]="role">{{ role }}</option>
+          </select>
+        </div>
+      
+        <!-- Validation message if no sub-role is selected -->
+        <div *ngIf="isHTOfficialRoleSelected && !hasSelectedSubRole">
+          <small class="error">Please select at least one sub-role for HT & Official.</small>
         </div>
       </div>
-
   
       <!-- UDISE Code Field -->
       <div>
@@ -169,9 +149,13 @@
         </div>
       </div>      
   
-      <button type="submit" [disabled]="registrationForm.invalid" (click)="onSubmit()">
+      <button 
+        type="submit" 
+        [disabled]="registrationForm.invalid || (registrationForm.get('userRole')?.value === 'HT & Official' && !hasSelectedSubRole)" 
+        (click)="onSubmit()">
         Register
       </button>
+
     </form>
   </div>
 

@@ -22,13 +22,13 @@ export class RegistrationComponent {
   registrationForm;
   passwordVisible: boolean = false;
   isSubRoleEnabled: boolean = false;
-  officialRoles = ['CRM', 'HM', 'AAA'];
+  officialRoles = ['HM', 'CRP', 'Complex HM', 'MEO', 'DyEO', 'ATWO', 'DTWO', 'GCDO PMRC', 'CMO PMRC', 'AMO PMRC', 'DDTW', 'ASO DPO', 'Asst ALS Coordinator',
+    'Asst IE Coordinator', 'ALS Coordinator', 'IE Coordinator', 'CMO', 'AAMO', 'AMO', 'APC', 'DIET Lecturer', 'DIET Principal', 'DEO', 'RJD', 'SLCC', 'SLMO',
+    'SPPD', 'Director Adult Eucation', 'Director Public Libraries', 'Director SCERT', 'Secretary KGBV', 'Secretary Public Libraries',
+    'Deputy Director Adult Education', 'Librarian Public Libraries/ Book Deposit Center', 'Instructor/ Volunteer Adult Education', 'BDC Incharge'];
   locationdata: any;
-  selectedSubRoles: { [key: string]: boolean } = {
-    crm: false,
-    hm: false,
-    aaa: false
-  };
+  isHTOfficialRoleSelected: boolean = false;
+  selectedSubRolesArray: string[] = [];
 
   constructor(private fb: FormBuilder, private httpClient: HttpClient) {
     this.registrationForm = this.fb.group({
@@ -44,7 +44,7 @@ export class RegistrationComponent {
         ],
       ],
       userRole: ['', [Validators.required]],
-      subUserRole: [{ value: <string[]>[], disabled: true }, [Validators.required]],
+      subUserRole: [[]],
       udise: ['', [Validators.required]],
     });
   }
@@ -56,13 +56,16 @@ export class RegistrationComponent {
       this.isSubRoleEnabled = true; // Enable Sub User Roles if "HT & Official" is selected
     } else {
       this.isSubRoleEnabled = false; // Hide Sub User Roles for other user roles
-      this.selectedSubRoles = {}; // Clear selected sub roles when hiding the checkboxes
+      this.selectedSubRolesArray = []; // Clear selected sub roles when hiding the checkboxes
     }
   }
 
-  // This method updates the selectedSubRoles when a checkbox is checked/unchecked
-  onCheckboxChange(role: string): void {
-    const rolesArray = Object.keys(this.selectedSubRoles).filter(roleKey => this.selectedSubRoles[roleKey]);
+  getSelectedSubRoles() {
+    this.selectedSubRolesArray = this.registrationForm.get('subUserRole')?.value ?? [];
+  }
+
+  get hasSelectedSubRole(): boolean {
+    return this.selectedSubRolesArray.length > 0;
   }
 
   async fetchLocationData() {
@@ -153,14 +156,12 @@ export class RegistrationComponent {
     const userRole = this.registrationForm.get('userRole')?.value ?? ''; 
 
     if (userRole === 'HT & Official') {
-      Object.keys(this.selectedSubRoles).forEach(role => {
-        if (this.selectedSubRoles[role]) {
-          userTypes.push({
-            type: userRole,
-            subType: role
-          });
-        }
-      });
+      this.selectedSubRolesArray.forEach(role => {
+        userTypes.push({
+          type: userRole,
+          subType: role
+        });
+      });      
     } else {
       if (userRole === 'Youth' || userRole === 'Teacher') {
         userTypes.push({
@@ -193,7 +194,6 @@ export class RegistrationComponent {
       Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI5dndaeklzS3U0ZzRjSWxoZnE1MWQ2SlR1d0w4dktlZCJ9.4jPaZhi9dHMzqqoZAZvfD5t5QPAVAuWOr9SDf1apZb8',
       'Content-Type': 'application/json'
     });    
-    console.log("requestData", requestData);
 
     this.httpClient
       .post(urlConstants.API_URLS.SUBMIT_USER_DATA, requestData, { headers })
