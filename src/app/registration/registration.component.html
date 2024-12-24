@@ -168,13 +168,13 @@
             formControlName="otp"
             required
           />
-          <button class="btn btn-primary btn-sm" (click)="fetchLocationData()" style="width: 100px;" >
+          <button class="btn btn-primary btn-sm" (click)="verifyOTP()" style="width: 100px;" >
             Verify OTP
           </button>
         </div>
         <div *ngIf="registrationForm.get('otp')?.touched && registrationForm.get('otp')?.invalid">
           <small class="error" *ngIf="registrationForm.get('otp')?.errors?.['required']">
-            UDISE code is required.
+            OTP is required.
           </small>
         </div>
       </div>

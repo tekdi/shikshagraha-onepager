@@ -5,9 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http'; // Add HttpClientModule
 import { urlConstants } from '../service/urlConstants';
 import { catchError } from 'rxjs/operators';
-import { GenerateOtpRequest } from '../../assets/otpInterface';
 import { NavigationExtras, Router } from '@angular/router';
-import { ProfileService } from '@project-sunbird/sunbird-sdk';
 
 @Component({
   selector: 'app-registration',
@@ -39,7 +37,6 @@ export class RegistrationComponent {
   isVerifyOtpEnabled: boolean = false;
 
   constructor(private fb: FormBuilder, private httpClient: HttpClient, private router: Router) {
-    // , @Inject('PROFILE_SERVICE') private profileService: ProfileService
     this.registrationForm = this.fb.group({
       name: ['', [Validators.required]],
       dob: ['', [Validators.required]],
@@ -218,37 +215,32 @@ export class RegistrationComponent {
   }
 
   generateOTP() {
-    let req: GenerateOtpRequest;
-    req = {
-      key: this.registrationForm.get('email')?.value ?? '',
-      type: 'email'
+    let req = {
+      request: {
+        key: this.registrationForm.get('email')?.value ?? '',
+        type: 'email'
+      }
     };
-    console.log("OTP sent",req);
-    this.isVerifyOtpEnabled = true;
-    // if ("otp sent") {
-    //   this.isVerifyOtpEnabled = true;
-    // }
-    // else {
-    //   this.isVerifyOtpEnabled = true;
-    // }
-    // this.profileService.generateOTP(req).toPromise()
-    //   .then(async () => {
-    //     console.log("OTP sent",req);
-    //     if (this.loader) {
-    //       await this.loader.dismiss();
-    //       this.loader = undefined;
-    //     }
-    //   })
-    //   .catch(async (err) => {
-    //     if (this.loader) {
-    //       await this.loader.dismiss();
-    //       this.loader = undefined;
-    //     }
-    //     if (err.response && err.response.body.params.err) {
-    //       console.log("error", err);
-    //     }
-    //   }
-    // );
+    const headers = new HttpHeaders({
+      Authorization: '',
+      'Content-Type': 'application/json',
+    });
+    this.httpClient
+      .post(urlConstants.API_URLS.OTP_GENERATE, req, { headers })
+      .pipe(catchError(error => {
+        console.error('Error submitting data:', error);
+          this.isVerifyOtpEnabled = false;
+        throw error;
+      }))
+      .subscribe(response => {
+        this.isVerifyOtpEnabled = true;
+        console.log('User data submitted successfully:', response);
+      }
+    );
+  }
+
+  verifyOTP() {
+    console.log("OTP verified");
   }
 
   resetForm() {
