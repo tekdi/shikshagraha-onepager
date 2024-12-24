@@ -2,7 +2,7 @@
   <!-- First section -->
   <div class="registration-container">
     <h2>Registration Form</h2>
-    <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="registrationForm">
       <!-- Name Field -->
       <div>
         <label for="name">Name</label>
@@ -138,7 +138,8 @@
             formControlName="udise"
             required
           />
-          <button class="btn btn-primary btn-sm" (click)="fetchLocationData()" style="width: 100px;">
+          <button class="btn btn-primary btn-sm" (click)="fetchLocationData()" style="width: 100px;"
+          [disabled]="!registrationForm.get('udise')?.value || otpGenerated || otpVerified || isVerifyOtpEnabled">
             Verify
           </button>
         </div>
@@ -147,7 +148,36 @@
             UDISE code is required.
           </small>
         </div>
-      </div>      
+      </div>
+      
+      <!-- Generate otp -->
+      <div *ngIf="isGenerateOtpEnabled">
+        <button (click)="generateOTP()" style="width: 200px;" [disabled]="isVerifyOtpEnabled">
+          Generate OTP
+        </button>
+      </div>
+
+      <!-- Verify otp -->
+      <div *ngIf="isGenerateOtpEnabled && isVerifyOtpEnabled">
+        <label for="udise">Enter OTP</label>
+        <div class="input-button-container">
+          <input
+            type="number"
+            id="otp"
+            name="otp"
+            formControlName="otp"
+            required
+          />
+          <button class="btn btn-primary btn-sm" (click)="fetchLocationData()" style="width: 100px;" >
+            Verify OTP
+          </button>
+        </div>
+        <div *ngIf="registrationForm.get('otp')?.touched && registrationForm.get('otp')?.invalid">
+          <small class="error" *ngIf="registrationForm.get('otp')?.errors?.['required']">
+            UDISE code is required.
+          </small>
+        </div>
+      </div>
   
       <button 
         type="submit" 

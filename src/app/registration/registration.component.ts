@@ -1,10 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http'; // Add HttpClientModule
 import { urlConstants } from '../service/urlConstants';
 import { catchError } from 'rxjs/operators';
+import { GenerateOtpRequest } from '../../assets/otpInterface';
+import { NavigationExtras, Router } from '@angular/router';
+import { ProfileService } from '@project-sunbird/sunbird-sdk';
 
 @Component({
   selector: 'app-registration',
@@ -29,8 +32,14 @@ export class RegistrationComponent {
   locationdata: any;
   isHTOfficialRoleSelected: boolean = false;
   selectedSubRolesArray: string[] = [];
+  loader: any;
+  otpGenerated: boolean = false;
+  otpVerified: boolean = false;
+  isGenerateOtpEnabled: boolean = false;
+  isVerifyOtpEnabled: boolean = false;
 
-  constructor(private fb: FormBuilder, private httpClient: HttpClient) {
+  constructor(private fb: FormBuilder, private httpClient: HttpClient, private router: Router) {
+    // , @Inject('PROFILE_SERVICE') private profileService: ProfileService
     this.registrationForm = this.fb.group({
       name: ['', [Validators.required]],
       dob: ['', [Validators.required]],
@@ -46,6 +55,7 @@ export class RegistrationComponent {
       userRole: ['', [Validators.required]],
       subUserRole: [[]],
       udise: ['', [Validators.required]],
+      otp: [''],
     });
   }
 
@@ -81,7 +91,7 @@ export class RegistrationComponent {
       };
 
       const headers = new HttpHeaders({
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI5dndaeklzS3U0ZzRjSWxoZnE1MWQ2SlR1d0w4dktlZCJ9.4jPaZhi9dHMzqqoZAZvfD5t5QPAVAuWOr9SDf1apZb8',
+        Authorization: '',
         'Content-Type': 'application/json'
       });
 
@@ -90,8 +100,12 @@ export class RegistrationComponent {
         .toPromise();
 
       if (schoolResponse.result.count === 0) {
+        this.isGenerateOtpEnabled = false;
         this.locationdata = {};
         return;
+      }
+      else {
+        this.isGenerateOtpEnabled = true  ;
       }
 
       const school = schoolResponse.result.response[0];
@@ -124,10 +138,6 @@ export class RegistrationComponent {
 
     await this.fetchLocationDataRecursively(location.parentId, headers);
   }
-
-  getotp() {}
-
-  verifyotp() {}
 
   onSubmit() {
     this.fetchLocationData().then(() => {
@@ -191,7 +201,7 @@ export class RegistrationComponent {
 
   submitData(requestData: any) {
     const headers = new HttpHeaders({
-      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI5dndaeklzS3U0ZzRjSWxoZnE1MWQ2SlR1d0w4dktlZCJ9.4jPaZhi9dHMzqqoZAZvfD5t5QPAVAuWOr9SDf1apZb8',
+      Authorization: '',
       'Content-Type': 'application/json'
     });    
 
@@ -203,6 +213,54 @@ export class RegistrationComponent {
       }))
       .subscribe(response => {
         console.log('User data submitted successfully:', response);
+        this.resetForm();
       });
+  }
+
+  generateOTP() {
+    let req: GenerateOtpRequest;
+    req = {
+      key: this.registrationForm.get('email')?.value ?? '',
+      type: 'email'
+    };
+    console.log("OTP sent",req);
+    this.isVerifyOtpEnabled = true;
+    // if ("otp sent") {
+    //   this.isVerifyOtpEnabled = true;
+    // }
+    // else {
+    //   this.isVerifyOtpEnabled = true;
+    // }
+    // this.profileService.generateOTP(req).toPromise()
+    //   .then(async () => {
+    //     console.log("OTP sent",req);
+    //     if (this.loader) {
+    //       await this.loader.dismiss();
+    //       this.loader = undefined;
+    //     }
+    //   })
+    //   .catch(async (err) => {
+    //     if (this.loader) {
+    //       await this.loader.dismiss();
+    //       this.loader = undefined;
+    //     }
+    //     if (err.response && err.response.body.params.err) {
+    //       console.log("error", err);
+    //     }
+    //   }
+    // );
+  }
+
+  resetForm() {
+    this.registrationForm.reset();
+    this.passwordVisible = false;
+    this.isSubRoleEnabled = false;
+    this.locationdata = {};
+    this.isHTOfficialRoleSelected = false;
+    this.selectedSubRolesArray = [];
+    this.otpGenerated = false;
+    this.otpVerified = false;
+    this.isGenerateOtpEnabled = false;
+    this.isVerifyOtpEnabled = false;    
   }
 }
