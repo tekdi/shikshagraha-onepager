@@ -1,52 +1,73 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f4f7fa;
+  height: 100vh; /* Ensure full viewport height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Hide overflow on the body */
+}
+
 /* Main container for the entire page */
 .page-container {
   display: flex;
-  flex-wrap: wrap; /* Allow wrapping for smaller screens */
-  gap: 20px; /* Add space between sections */
-  padding: 20px; /* Add padding around the sections */
-  justify-content: center; /* Center align the sections */
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
+  max-height: 100vh; /* Ensure no vertical overflow */
+  overflow: hidden;
 }
 
 /* Registration container */
 .registration-container {
-  flex: 1; /* Allow it to take equal space as the data container */
-  min-width: 300px; /* Ensure it doesn't shrink too much */
+  flex: 1;
+  min-width: 300px;
   max-width: 500px;
-  padding: 20px;
+  padding: 15px;
   border-radius: 8px;
-  background-color: #ffffff; /* White background for the form */
+  background-color: #ffffff;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  overflow: hidden; /* To ensure proper border-radius */
 }
 
 /* Data container */
 .data-container {
-  flex: 1; /* Allow it to take equal space as the registration container */
-  min-width: 300px; /* Ensure it doesn't shrink too much */
+  flex: 1;
+  min-width: 300px;
   max-width: 500px;
+  max-height: 90vh; /* Limit height for data container */
+  overflow-y: auto; /* Scroll within the data if needed */
   padding: 20px;
-  border-radius: 8px;
-  background-color: #f8f9fa; /* Light gray background for data display */
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background-color: #e9ecef;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* Header styling for the registration form */
 .registration-container h2 {
-  margin: 0 -20px 20px -20px; /* Extend the header background to match container edges */
-  padding: 15px 20px;
-  color: #ffffff; /* White text */
-  background-color: #FF9911; /* Specified background color */
+  margin: 0 0 15px 0;
+  padding: 12px 15px;
+  color: #ffffff;
+  background: linear-gradient(90deg, #FF9911, #FF6A00);
   text-align: center;
-  font-family: Arial, sans-serif;
-  border-radius: 8px 8px 0 0; /* Rounded top corners */
+  border-radius: 8px 8px 0 0;
+  font-size: 20px; /* Smaller font size */
 }
 
 /* Header styling for the data container */
 .data-container h3 {
-  margin-bottom: 20px;
-  color: #333; /* Darker text for contrast */
-  font-family: Arial, sans-serif;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 20px;
   text-align: center;
+  font-weight: bold;
 }
 
 /* General input and label styling */
@@ -54,34 +75,44 @@
 .registration-container select,
 .data-container p {
   width: 100%;
-  padding: 10px;
+  padding: 8px 12px; /* Smaller padding */
   margin-bottom: 10px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
+  border-radius: 6px; /* Slightly smaller radius */
+  font-size: 14px; /* Smaller font size */
+  transition: all 0.3s ease;
 }
 
+.registration-container input:focus,
+.registration-container select:focus {
+  border-color: #FF9911;
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 153, 17, 0.5);
+}
+
+/* Label Styling */
 .registration-container label {
   font-weight: bold;
-  color: #555;
+  color: #444;
   margin-bottom: 5px;
+  font-size: 14px; /* Smaller font size */
 }
 
 /* Submit button */
 .registration-container button {
   width: 100%;
   padding: 10px;
-  font-size: 16px;
+  font-size: 14px; /* Smaller button font size */
   color: white;
-  background-color: #572E91; /* Button color */
+  background-color: #572E91;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px; /* Smaller border radius */
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .registration-container button:hover:not(:disabled) {
-  background-color: #451f6f; /* Darker shade for hover */
+  background-color: #451f6f;
 }
 
 .registration-container button:disabled {
@@ -92,97 +123,112 @@
 .error {
   color: red;
   font-size: 12px;
+  margin-top: 5px;
 }
 
+/* Password Container */
 .password-container {
   display: flex;
-  flex-direction: column; /* Stack password input and checkbox vertically */
-  align-items: flex-start; /* Align everything to the left */
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .checkbox-container {
   display: flex;
-  align-items: center; /* Align checkbox and label vertically */
-  gap: 0.5rem; /* Space between checkbox and label */
-  white-space: nowrap; /* Prevent line break in text */
+  align-items: center;
+  gap: 10px;
 }
 
-label {
-  margin: 0;
-  padding: 0;
-}
-
-/* Input fields */
+/* Input fields with subtle focus effect */
+.registration-container input,
 .registration-container select {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 5px;
+  padding: 10px 12px; /* Reduced padding */
+  margin-bottom: 10px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 14px;
+  background-color: #f9f9f9;
 }
 
-/* Alignment for UDISE Code input and Verify button */
+.registration-container input:focus,
+.registration-container select:focus {
+  border-color: #FF9911;
+  box-shadow: 0 0 8px rgba(255, 153, 17, 0.5);
+}
+
+/* UDISE Code Input and Verify Button */
 .input-button-container {
   display: flex;
-  align-items: center; /* Align input and button vertically */
-  gap: 10px; /* Add space between the input and button */
+  align-items: center;
+  gap: 15px;
 }
 
 .input-button-container input {
-  flex: 1; /* Input takes up available space */
-  padding: 10px; /* Consistent padding */
-  font-size: 14px; /* Font size */
-  border: 1px solid #ccc; /* Border style */
-  border-radius: 4px; /* Rounded corners */
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f9f9f9;
 }
 
 .input-button-container button {
-  flex-shrink: 0; /* Prevent button from shrinking */
-  padding: 10px; /* Consistent padding */
-  font-size: 14px; /* Font size */
-  border-radius: 4px; /* Rounded corners */
-  cursor: pointer; /* Pointer on hover */
-}
-
-.custom-dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-button {
-  padding: 10px;
-  font-size: 16px;
+  padding: 10px 15px;
+  font-size: 14px;
+  background-color: #FF9911;
+  color: white;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #fff;
-  width: 200px;
-  text-align: left;
+  transition: background-color 0.3s ease;
 }
 
-.dropdown-content {
-  position: absolute;
-  z-index: 1;
-  background-color: #fff;
+.input-button-container button:hover {
+  background-color: #FF6A00;
+}
+
+/* Multi-select dropdown styling */
+.multi-select-dropdown {
+  padding: 10px;
+  margin-bottom: 10px;
   border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #f9f9f9;
+}
+
+/* Buttons for OTP Generation and Verification */
+button[type="button"],
+button[type="submit"] {
+  padding: 12px;
   width: 100%;
-  max-height: 200px;
-  overflow-y: auto;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  padding: 10px;
+  border-radius: 6px; /* Smaller border radius */
+  font-size: 14px; /* Smaller font size */
+  transition: all 0.3s ease;
 }
 
-.dropdown-content label {
-  display: block;
-  padding: 5px;
-  cursor: pointer;
+button[type="button"]:hover,
+button[type="submit"]:hover {
+  background-color: #FF6A00;
+  transform: scale(1.05);
 }
 
-.dropdown-content input {
-  margin-right: 8px;
+button[type="button"]:disabled,
+button[type="submit"]:disabled {
+  background-color: #ddd;
 }
 
-.dropdown-content label:hover {
-  background-color: #f1f1f1;
+/* Responsive Styles for smaller screens */
+@media (max-width: 768px) {
+  .page-container {
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+  }
+
+  .registration-container,
+  .data-container {
+    max-width: 100%;
+    min-width: 100%;
+  }
 }

@@ -6,6 +6,7 @@ import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http'
 import { urlConstants } from '../service/urlConstants';
 import { catchError } from 'rxjs/operators';
 import { NavigationExtras, Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-registration',
@@ -36,7 +37,8 @@ export class RegistrationComponent {
   isGenerateOtpEnabled: boolean = false;
   isVerifyOtpEnabled: boolean = false;
 
-  constructor(private fb: FormBuilder, private httpClient: HttpClient, private router: Router) {
+  constructor(private fb: FormBuilder, private httpClient: HttpClient, private router: Router,
+  ) {
     this.registrationForm = this.fb.group({
       name: ['', [Validators.required]],
       dob: ['', [Validators.required]],
@@ -86,14 +88,14 @@ export class RegistrationComponent {
           }
         }
       };
-
+     console.log("environment",environment)
       const headers = new HttpHeaders({
-        Authorization: '',
+        Authorization: environment.auth,
         'Content-Type': 'application/json'
       });
 
       const schoolResponse: any = await this.httpClient
-        .post(urlConstants.API_URLS.SEARCH_LOCATION, initialPayload, { headers })
+        .post(environment.API_URLS.SEARCH_LOCATION, initialPayload, { headers })
         .toPromise();
 
       if (schoolResponse.result.count === 0) {
@@ -124,7 +126,7 @@ export class RegistrationComponent {
     };
 
     const response: any = await this.httpClient
-      .post(urlConstants.API_URLS.SEARCH_LOCATION, payload, { headers })
+      .post(environment.API_URLS.SEARCH_LOCATION, payload, { headers })
       .toPromise();
 
     const location = response.result.response[0];
@@ -198,12 +200,13 @@ export class RegistrationComponent {
 
   submitData(requestData: any) {
     const headers = new HttpHeaders({
-      Authorization: '',
+      Authorization: environment.auth,
       'Content-Type': 'application/json'
     });    
+   
 
     this.httpClient
-      .post(urlConstants.API_URLS.SUBMIT_USER_DATA, requestData, { headers })
+      .post( environment.API_URLS.SUBMIT_USER_DATA, requestData, { headers })
       .pipe(catchError(error => {
         console.error('Error submitting data:', error);
         throw error;
@@ -222,11 +225,11 @@ export class RegistrationComponent {
       }
     };
     const headers = new HttpHeaders({
-      Authorization: '',
+      Authorization: environment.auth,
       'Content-Type': 'application/json',
     });
     this.httpClient
-      .post(urlConstants.API_URLS.OTP_GENERATE, req, { headers })
+      .post( environment.API_URLS.OTP_GENERATE, req, { headers })
       .pipe(catchError(error => {
         console.error('Error submitting data:', error);
           this.isVerifyOtpEnabled = false;
@@ -248,11 +251,11 @@ export class RegistrationComponent {
       }
     };
     const headers = new HttpHeaders({
-      Authorization: '',
+      Authorization: environment.auth,
       'Content-Type': 'application/json',
     });
     this.httpClient
-      .post(urlConstants.API_URLS.OTP_VERIFY, req, { headers })
+      .post(environment.API_URLS.OTP_VERIFY, req, { headers })
       .pipe(catchError(error => {
         console.error('Error submitting data:', error);
         throw error;

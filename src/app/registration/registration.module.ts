@@ -9,7 +9,7 @@ import { RegistrationComponent } from './registration.component';
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [],
   bootstrap: []
