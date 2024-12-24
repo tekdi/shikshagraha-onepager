@@ -234,13 +234,34 @@ export class RegistrationComponent {
       }))
       .subscribe(response => {
         this.isVerifyOtpEnabled = true;
-        console.log('User data submitted successfully:', response);
+        console.log('OTP generated successfully:', response);
       }
     );
   }
 
   verifyOTP() {
-    console.log("OTP verified");
+    let req = {
+      request: {
+        key: this.registrationForm.get('email')?.value ?? '',
+        type: 'email',
+        otp: String(this.registrationForm.get('otp')?.value ?? '')
+      }
+    };
+    const headers = new HttpHeaders({
+      Authorization: '',
+      'Content-Type': 'application/json',
+    });
+    this.httpClient
+      .post(urlConstants.API_URLS.OTP_VERIFY, req, { headers })
+      .pipe(catchError(error => {
+        console.error('Error submitting data:', error);
+        throw error;
+      }))
+      .subscribe(response => {
+        this.isVerifyOtpEnabled = true;
+        console.log('OTP submitted successfully:', response);
+      }
+    );
   }
 
   resetForm() {
