@@ -2,7 +2,11 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http'; // Add HttpClientModule
+import {
+  HttpClient,
+  HttpClientModule,
+  HttpHeaders,
+} from '@angular/common/http'; // Add HttpClientModule
 import { urlConstants } from '../service/urlConstants';
 import { catchError } from 'rxjs/operators';
 import { NavigationExtras, Router } from '@angular/router';
@@ -12,22 +16,56 @@ import { environment } from '../../environments/environment';
   selector: 'app-registration',
   standalone: true,
   imports: [
-    CommonModule, 
-    FormsModule, 
-    ReactiveFormsModule, 
-    HttpClientModule // Import HttpClientModule here
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule, // Import HttpClientModule here
   ],
   templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.css']
+  styleUrls: ['./registration.component.css'],
 })
 export class RegistrationComponent {
   registrationForm;
   passwordVisible: boolean = false;
   isSubRoleEnabled: boolean = false;
-  officialRoles = ['HM', 'CRP', 'Complex HM', 'MEO', 'DyEO', 'ATWO', 'DTWO', 'GCDO PMRC', 'CMO PMRC', 'AMO PMRC', 'DDTW', 'ASO DPO', 'Asst ALS Coordinator',
-    'Asst IE Coordinator', 'ALS Coordinator', 'IE Coordinator', 'CMO', 'AAMO', 'AMO', 'APC', 'DIET Lecturer', 'DIET Principal', 'DEO', 'RJD', 'SLCC', 'SLMO',
-    'SPPD', 'Director Adult Eucation', 'Director Public Libraries', 'Director SCERT', 'Secretary KGBV', 'Secretary Public Libraries',
-    'Deputy Director Adult Education', 'Librarian Public Libraries/ Book Deposit Center', 'Instructor/ Volunteer Adult Education', 'BDC Incharge'];
+  officialRoles = [
+    'HM',
+    'CRP',
+    'Complex HM',
+    'MEO',
+    'DyEO',
+    'ATWO',
+    'DTWO',
+    'GCDO PMRC',
+    'CMO PMRC',
+    'AMO PMRC',
+    'DDTW',
+    'ASO DPO',
+    'Asst ALS Coordinator',
+    'Asst IE Coordinator',
+    'ALS Coordinator',
+    'IE Coordinator',
+    'CMO',
+    'AAMO',
+    'AMO',
+    'APC',
+    'DIET Lecturer',
+    'DIET Principal',
+    'DEO',
+    'RJD',
+    'SLCC',
+    'SLMO',
+    'SPPD',
+    'Director Adult Eucation',
+    'Director Public Libraries',
+    'Director SCERT',
+    'Secretary KGBV',
+    'Secretary Public Libraries',
+    'Deputy Director Adult Education',
+    'Librarian Public Libraries/ Book Deposit Center',
+    'Instructor/ Volunteer Adult Education',
+    'BDC Incharge',
+  ];
   locationdata: any;
   isHTOfficialRoleSelected: boolean = false;
   selectedSubRolesArray: string[] = [];
@@ -36,8 +74,11 @@ export class RegistrationComponent {
   otpVerified: boolean = false;
   isGenerateOtpEnabled: boolean = false;
   isVerifyOtpEnabled: boolean = false;
-
-  constructor(private fb: FormBuilder, private httpClient: HttpClient, private router: Router,
+  registerButton: boolean = false;
+  constructor(
+    private fb: FormBuilder,
+    private httpClient: HttpClient,
+    private router: Router
   ) {
     this.registrationForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -48,7 +89,9 @@ export class RegistrationComponent {
         [
           Validators.required,
           Validators.minLength(8),
-          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
+          Validators.pattern(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+          ),
         ],
       ],
       userRole: ['', [Validators.required]],
@@ -70,7 +113,8 @@ export class RegistrationComponent {
   }
 
   getSelectedSubRoles() {
-    this.selectedSubRolesArray = this.registrationForm.get('subUserRole')?.value ?? [];
+    this.selectedSubRolesArray =
+      this.registrationForm.get('subUserRole')?.value ?? [];
   }
 
   get hasSelectedSubRole(): boolean {
@@ -84,14 +128,14 @@ export class RegistrationComponent {
         request: {
           filters: {
             code: code,
-            type: 'school'
-          }
-        }
+            type: 'school',
+          },
+        },
       };
-     console.log("environment",environment)
+      console.log('environment', environment);
       const headers = new HttpHeaders({
         Authorization: environment.auth,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       });
 
       const schoolResponse: any = await this.httpClient
@@ -102,9 +146,8 @@ export class RegistrationComponent {
         this.isGenerateOtpEnabled = false;
         this.locationdata = {};
         return;
-      }
-      else {
-        this.isGenerateOtpEnabled = true  ;
+      } else {
+        this.isGenerateOtpEnabled = true;
       }
 
       const school = schoolResponse.result.response[0];
@@ -121,8 +164,8 @@ export class RegistrationComponent {
 
     const payload = {
       request: {
-        filters: { id: parentId }
-      }
+        filters: { id: parentId },
+      },
     };
 
     const response: any = await this.httpClient
@@ -132,7 +175,8 @@ export class RegistrationComponent {
     const location = response.result.response[0];
     if (location.type === 'cluster') this.locationdata.cluster = location;
     else if (location.type === 'block') this.locationdata.block = location;
-    else if (location.type === 'district') this.locationdata.district = location;
+    else if (location.type === 'district')
+      this.locationdata.district = location;
     else if (location.type === 'state') this.locationdata.state = location;
 
     await this.fetchLocationDataRecursively(location.parentId, headers);
@@ -152,30 +196,30 @@ export class RegistrationComponent {
     const lastName = nameParts.slice(1).join(' ') || '';
 
     const dob = this.registrationForm.get('dob')?.value; // Get the date value
-  
+
     const profileLocation = [
       this.locationdata.state,
       this.locationdata.district,
       this.locationdata.block,
       this.locationdata.cluster,
-      this.locationdata.school
+      this.locationdata.school,
     ].filter(Boolean); // Remove any undefined/null values
 
-    let userTypes: { type: string, subType: string }[] = [];
-    const userRole = this.registrationForm.get('userRole')?.value ?? ''; 
+    let userTypes: { type: string; subType: string }[] = [];
+    const userRole = this.registrationForm.get('userRole')?.value ?? '';
 
     if (userRole === 'HT & Official') {
-      this.selectedSubRolesArray.forEach(role => {
+      this.selectedSubRolesArray.forEach((role) => {
         userTypes.push({
           type: userRole,
-          subType: role
+          subType: role,
         });
-      });      
+      });
     } else {
       if (userRole === 'Youth' || userRole === 'Teacher') {
         userTypes.push({
           type: userRole,
-          subType: ''
+          subType: '',
         });
       }
     }
@@ -190,28 +234,29 @@ export class RegistrationComponent {
           userName: firstName.toLowerCase(),
           password: this.registrationForm.get('password')?.value,
           dob: dob ? dob.split('-')[0] : '', // Extract year from DOB
-          roles: ['PUBLIC']
+          roles: ['PUBLIC'],
         },
         profileLocation,
-        profileUserTypes: [{ type: userTypes }]
-      }
+        profileUserTypes: [{ type: userTypes }],
+      },
     };
   }
 
   submitData(requestData: any) {
     const headers = new HttpHeaders({
       Authorization: environment.auth,
-      'Content-Type': 'application/json'
-    });    
-   
+      'Content-Type': 'application/json',
+    });
 
     this.httpClient
-      .post( environment.API_URLS.SUBMIT_USER_DATA, requestData, { headers })
-      .pipe(catchError(error => {
-        console.error('Error submitting data:', error);
-        throw error;
-      }))
-      .subscribe(response => {
+      .post(environment.API_URLS.SUBMIT_USER_DATA, requestData, { headers })
+      .pipe(
+        catchError((error) => {
+          console.error('Error submitting data:', error);
+          throw error;
+        })
+      )
+      .subscribe((response) => {
         console.log('User data submitted successfully:', response);
         this.resetForm();
       });
@@ -221,25 +266,26 @@ export class RegistrationComponent {
     let req = {
       request: {
         key: this.registrationForm.get('email')?.value ?? '',
-        type: 'email'
-      }
+        type: 'email',
+      },
     };
     const headers = new HttpHeaders({
       Authorization: environment.auth,
       'Content-Type': 'application/json',
     });
     this.httpClient
-      .post( environment.API_URLS.OTP_GENERATE, req, { headers })
-      .pipe(catchError(error => {
-        console.error('Error submitting data:', error);
+      .post(environment.API_URLS.OTP_GENERATE, req, { headers })
+      .pipe(
+        catchError((error) => {
+          console.error('Error submitting data:', error);
           this.isVerifyOtpEnabled = false;
-        throw error;
-      }))
-      .subscribe(response => {
+          throw error;
+        })
+      )
+      .subscribe((response) => {
         this.isVerifyOtpEnabled = true;
         console.log('OTP generated successfully:', response);
-      }
-    );
+      });
   }
 
   verifyOTP() {
@@ -247,8 +293,8 @@ export class RegistrationComponent {
       request: {
         key: this.registrationForm.get('email')?.value ?? '',
         type: 'email',
-        otp: String(this.registrationForm.get('otp')?.value ?? '')
-      }
+        otp: String(this.registrationForm.get('otp')?.value ?? ''),
+      },
     };
     const headers = new HttpHeaders({
       Authorization: environment.auth,
@@ -256,15 +302,17 @@ export class RegistrationComponent {
     });
     this.httpClient
       .post(environment.API_URLS.OTP_VERIFY, req, { headers })
-      .pipe(catchError(error => {
-        console.error('Error submitting data:', error);
-        throw error;
-      }))
-      .subscribe(response => {
+      .pipe(
+        catchError((error) => {
+          console.error('Error submitting data:', error);
+          throw error;
+        })
+      )
+      .subscribe((response) => {
         this.isVerifyOtpEnabled = true;
+        this.registerButton = true;
         console.log('OTP submitted successfully:', response);
-      }
-    );
+      });
   }
 
   resetForm() {
@@ -277,6 +325,6 @@ export class RegistrationComponent {
     this.otpGenerated = false;
     this.otpVerified = false;
     this.isGenerateOtpEnabled = false;
-    this.isVerifyOtpEnabled = false;    
+    this.isVerifyOtpEnabled = false;
   }
 }

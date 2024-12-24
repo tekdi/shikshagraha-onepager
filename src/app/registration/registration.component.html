@@ -13,30 +13,40 @@
           formControlName="name"
           required
         />
-        <div *ngIf="registrationForm.get('name')?.touched && registrationForm.get('name')?.invalid">
-          <small class="error" *ngIf="registrationForm.get('name')?.errors?.['required']">
+        <div
+          *ngIf="
+            registrationForm.get('name')?.touched &&
+            registrationForm.get('name')?.invalid
+          "
+        >
+          <small
+            class="error"
+            *ngIf="registrationForm.get('name')?.errors?.['required']"
+          >
             Name is required.
           </small>
         </div>
       </div>
-  
+
       <!-- Date of Birth Field -->
       <div>
         <label for="dob">Date of Birth</label>
-        <input
-          type="date"
-          id="dob"
-          name="dob"
-          formControlName="dob"
-          required
-        />
-        <div *ngIf="registrationForm.get('dob')?.touched && registrationForm.get('dob')?.invalid">
-          <small class="error" *ngIf="registrationForm.get('dob')?.errors?.['required']">
+        <input type="date" id="dob" name="dob" formControlName="dob" required />
+        <div
+          *ngIf="
+            registrationForm.get('dob')?.touched &&
+            registrationForm.get('dob')?.invalid
+          "
+        >
+          <small
+            class="error"
+            *ngIf="registrationForm.get('dob')?.errors?.['required']"
+          >
             Date of Birth is required.
           </small>
         </div>
       </div>
-  
+
       <!-- Email Field -->
       <div>
         <label for="email">Email ID</label>
@@ -47,16 +57,27 @@
           formControlName="email"
           required
         />
-        <div *ngIf="registrationForm.get('email')?.touched && registrationForm.get('email')?.invalid">
-          <small class="error" *ngIf="registrationForm.get('email')?.errors?.['required']">
+        <div
+          *ngIf="
+            registrationForm.get('email')?.touched &&
+            registrationForm.get('email')?.invalid
+          "
+        >
+          <small
+            class="error"
+            *ngIf="registrationForm.get('email')?.errors?.['required']"
+          >
             Email is required.
           </small>
-          <small class="error" *ngIf="registrationForm.get('email')?.errors?.['email']">
+          <small
+            class="error"
+            *ngIf="registrationForm.get('email')?.errors?.['email']"
+          >
             Invalid email format.
           </small>
         </div>
       </div>
-  
+
       <!-- Password Field -->
       <div>
         <label for="password">Password</label>
@@ -77,30 +98,59 @@
             <label for="showPassword">Show Password</label>
           </div>
         </div>
-        <div *ngIf="registrationForm.get('password')?.touched && registrationForm.get('password')?.invalid">
-          <small class="error" *ngIf="registrationForm.get('password')?.errors?.['required']">
+        <div
+          *ngIf="
+            registrationForm.get('password')?.touched &&
+            registrationForm.get('password')?.invalid
+          "
+        >
+          <small
+            class="error"
+            *ngIf="registrationForm.get('password')?.errors?.['required']"
+          >
             Password is required.
           </small>
-          <small class="error" *ngIf="registrationForm.get('password')?.errors?.['minlength']">
+          <small
+            class="error"
+            *ngIf="registrationForm.get('password')?.errors?.['minlength']"
+          >
             Password must be at least 8 characters long.
           </small>
-          <small class="error" *ngIf="registrationForm.get('password')?.errors?.['pattern']">
-            Password must contain uppercase, lowercase, number, and special character.
+          <small
+            class="error"
+            *ngIf="registrationForm.get('password')?.errors?.['pattern']"
+          >
+            Password must contain uppercase, lowercase, number, and special
+            character.
           </small>
         </div>
       </div>
-  
+
       <!-- User Role Field -->
       <div>
         <label for="userRole">User Role</label>
-        <select id="userRole" name="userRole" formControlName="userRole" (change)="onUserRoleChange()" required>
+        <select
+          id="userRole"
+          name="userRole"
+          formControlName="userRole"
+          (change)="onUserRoleChange()"
+          required
+        >
           <option value="" disabled>Select User Role</option>
           <option value="Teacher">Teacher</option>
           <option value="Youth">Youth</option>
           <option value="HT & Official">HT & Official</option>
         </select>
-        <div *ngIf="registrationForm.get('userRole')?.touched && registrationForm.get('userRole')?.invalid">
-          <small class="error" *ngIf="registrationForm.get('userRole')?.errors?.['required']">
+        <div
+          *ngIf="
+            registrationForm.get('userRole')?.touched &&
+            registrationForm.get('userRole')?.invalid
+          "
+        >
+          <small
+            class="error"
+            *ngIf="registrationForm.get('userRole')?.errors?.['required']"
+          >
             User Role is required.
           </small>
         </div>
@@ -110,23 +160,27 @@
       <div *ngIf="isSubRoleEnabled">
         <div class="sub-role-container">
           <label>Select Sub User Role</label>
-    
+
           <select
             multiple
             formControlName="subUserRole"
             class="multi-select-dropdown"
             (change)="getSelectedSubRoles()"
           >
-            <option *ngFor="let role of officialRoles" [value]="role">{{ role }}</option>
+            <option *ngFor="let role of officialRoles" [value]="role">
+              {{ role }}
+            </option>
           </select>
         </div>
-      
+
         <!-- Validation message if no sub-role is selected -->
         <div *ngIf="isHTOfficialRoleSelected && !hasSelectedSubRole">
-          <small class="error">Please select at least one sub-role for HT & Official.</small>
+          <small class="error"
+            >Please select at least one sub-role for HT & Official.</small
+          >
         </div>
       </div>
-  
+
       <!-- UDISE Code Field -->
       <div>
         <label for="udise">UDISE Code</label>
@@ -138,21 +192,43 @@
             formControlName="udise"
             required
           />
-          <button class="btn btn-primary btn-sm" (click)="fetchLocationData()" style="width: 100px;"
-          [disabled]="!registrationForm.get('udise')?.value || otpGenerated || otpVerified || isVerifyOtpEnabled">
+          <button
+            class="btn btn-primary btn-sm"
+            (click)="fetchLocationData()"
+            style="width: 100px"
+            [disabled]="
+              !registrationForm.get('udise')?.value ||
+              otpGenerated ||
+              otpVerified ||
+              isVerifyOtpEnabled ||
+              registrationForm.invalid
+            "
+          >
             Verify
           </button>
         </div>
-        <div *ngIf="registrationForm.get('udise')?.touched && registrationForm.get('udise')?.invalid">
-          <small class="error" *ngIf="registrationForm.get('udise')?.errors?.['required']">
+        <div
+          *ngIf="
+            registrationForm.get('udise')?.touched &&
+            registrationForm.get('udise')?.invalid
+          "
+        >
+          <small
+            class="error"
+            *ngIf="registrationForm.get('udise')?.errors?.['required']"
+          >
             UDISE code is required.
           </small>
         </div>
       </div>
-      
+
       <!-- Generate otp -->
       <div *ngIf="isGenerateOtpEnabled">
-        <button (click)="generateOTP()" style="width: 200px;" [disabled]="isVerifyOtpEnabled">
+        <button
+          (click)="generateOTP()"
+          style="width: 200px"
+          [disabled]="isVerifyOtpEnabled || registrationForm.invalid"
+        >
           Generate OTP
         </button>
       </div>
@@ -168,24 +244,32 @@
             formControlName="otp"
             required
           />
-          <button class="btn btn-primary btn-sm" (click)="verifyOTP()" style="width: 100px;" >
+          <button
+            class="btn btn-primary btn-sm"
+            (click)="verifyOTP()"
+            style="width: 100px"
+          >
             Verify OTP
           </button>
         </div>
-        <div *ngIf="registrationForm.get('otp')?.touched && registrationForm.get('otp')?.invalid">
-          <small class="error" *ngIf="registrationForm.get('otp')?.errors?.['required']">
+        <div
+          *ngIf="
+            registrationForm.get('otp')?.touched &&
+            registrationForm.get('otp')?.invalid
+          "
+        >
+          <small
+            class="error"
+            *ngIf="registrationForm.get('otp')?.errors?.['required']"
+          >
             OTP is required.
           </small>
         </div>
       </div>
-  
-      <button 
-        type="submit" 
-        [disabled]="registrationForm.invalid || (registrationForm.get('userRole')?.value === 'HT & Official' && !hasSelectedSubRole)" 
-        (click)="onSubmit()">
+
+      <button type="submit" [disabled]="!registerButton" (click)="onSubmit()">
         Register
       </button>
-
     </form>
   </div>
 
