@@ -137,6 +137,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
+  white-space: nowrap;
 }
 
 /* Input fields with subtle focus effect */

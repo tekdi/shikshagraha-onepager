@@ -237,7 +237,7 @@ export class RegistrationComponent {
           roles: ['PUBLIC'],
         },
         profileLocation,
-        profileUserTypes: [{ type: userTypes }],
+        profileUserTypes: userTypes,
       },
     };
   }
