@@ -233,3 +233,12 @@ button[type="submit"]:disabled {
     min-width: 100%;
   }
 }
+.success-snackbar {
+  background-color: #4caf50; /* Green for success */
+  color: #fff;
+}
+
+.error-snackbar {
+  background-color: #f44336; /* Red for error */
+  color: #fff;
+}
