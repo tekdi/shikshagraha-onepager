@@ -10,7 +10,8 @@ import {
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { MatDialog } from '@angular/material/dialog';
-import { LocationDataDialogComponent } from '../location-data-dialog/location-data-dialog.component'
+import { LocationDataDialogComponent } from '../location-data-dialog/location-data-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-registration',
@@ -82,7 +83,8 @@ export class RegistrationComponent {
   constructor(
     private fb: FormBuilder,
     private httpClient: HttpClient,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {
     this.registrationForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -147,14 +149,14 @@ export class RegistrationComponent {
         .toPromise();
 
       if (schoolResponse.result.count === 0) {
-        this.showMessage("Invalid UDISE Code", false);
+        this.showMessage("Invalid UDISE Code", 'error-snackbar');
         this.isGenerateOtpEnabled = false;
         this.locationdata = {};
         return;
       } else {
         this.openDialogForLocation();
         this.showInfoMessage = true;
-        this.showMessage("UDISE Data fetched Successfully", true);
+        this.showMessage("UDISE Data fetched Successfully", 'success-snackbar');
         this.isGenerateOtpEnabled = true;
       }
 
@@ -163,7 +165,7 @@ export class RegistrationComponent {
 
       await this.fetchLocationDataRecursively(school.parentId, headers);
     } catch (error) {
-      this.showMessage("Error in fetching location data", false);
+      this.showMessage("Error in fetching location data", 'error-snackbar');
       console.error('Error in fetching location data:', error);
     }
   }
@@ -262,14 +264,14 @@ export class RegistrationComponent {
       .post(environment.API_URLS.SUBMIT_USER_DATA, requestData, { headers })
       .pipe(
         catchError((error) => {
-          this.showMessage("Error" + error, false);
+          this.showMessage("Error" + error, 'error-snackbar');
           console.error('Error submitting data:', error);
           throw error;
         })
       )
       .subscribe((response) => {
         const message = (response as { message: string }).message;
-        this.showMessage(message, true);
+        this.showMessage(message, 'success-snackbar');
         console.log('User data submitted successfully:', response);
         this.resetForm();
       });
@@ -291,7 +293,7 @@ export class RegistrationComponent {
       .pipe(
         catchError((error) => {
           const message = (error as { message: string }).message;
-          this.showMessage(message, false);
+          this.showMessage(message, 'error-snackbar');
           console.error('Error submitting data:', error);
           this.isVerifyOtpEnabled = false;
           this.registrationForm.get('email')?.enable();
@@ -303,7 +305,7 @@ export class RegistrationComponent {
         this.isVerifyOtpEnabled = true;
         this.registrationForm.get('email')?.disable();
         this.registrationForm.get('udise')?.disable();
-        this.showMessage("OTP generated successfully", true);
+        this.showMessage("OTP generated successfully", 'success-snackbar');
         console.log('OTP generated successfully:', response);
       });
   }
@@ -324,7 +326,7 @@ export class RegistrationComponent {
       .post(environment.API_URLS.OTP_VERIFY, req, { headers })
       .pipe(
         catchError((error) => {
-          this.showMessage(error.error.params.errmsg, false);
+          this.showMessage(error.error.params.errmsg, 'error-snackbar');
           console.error('Error submitting data:', error.error.params.errmsg);
           throw error;
         })
@@ -334,7 +336,7 @@ export class RegistrationComponent {
         this.registerButton = true;
         this.registrationForm.get('email')?.disable();
         this.registrationForm.get('udise')?.disable();
-        this.showMessage('OTP submitted successfully:', true);
+        this.showMessage('OTP submitted successfully', 'success-snackbar');
         console.log('OTP submitted successfully:', response);
       });
   }
@@ -354,9 +356,11 @@ export class RegistrationComponent {
     // this.displayMessage = '';
   }
 
-  showMessage(message : string, isSuccess: boolean) {
-    this.displayMessage = message;
-    this.messageCss = isSuccess ? 'success-snackbar' : 'error-snackbar'
+  showMessage(message : string, cssStyle: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000, // Snackbar will auto-close after 5 seconds
+      panelClass: [cssStyle]
+    });
   }
 
   openDialogForLocation() {

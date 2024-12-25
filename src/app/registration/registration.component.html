@@ -2,10 +2,6 @@
   <div class="registration-container">
     <h2>Registration Form</h2>
 
-    <span id="info-message-top" [ngClass]="messageCss">
-      {{displayMessage}}
-    </span>
-
     <form [formGroup]="registrationForm">
       <!-- Name Field -->
       <div>
@@ -274,10 +270,6 @@
       <button type="submit" [disabled]="!registerButton" (click)="onSubmit()">
         Register
       </button>
-
-      <span id="info-message-bottom" [ngClass]="messageCss">
-        {{displayMessage}}
-      </span>
     </form>
   </div>
 </div>
