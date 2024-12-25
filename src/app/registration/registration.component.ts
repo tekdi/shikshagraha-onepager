@@ -7,9 +7,7 @@ import {
   HttpClientModule,
   HttpHeaders,
 } from '@angular/common/http'; // Add HttpClientModule
-import { urlConstants } from '../service/urlConstants';
 import { catchError } from 'rxjs/operators';
-import { NavigationExtras, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 
 @Component({
@@ -75,10 +73,12 @@ export class RegistrationComponent {
   isGenerateOtpEnabled: boolean = false;
   isVerifyOtpEnabled: boolean = false;
   registerButton: boolean = false;
+  showInfoMessage: boolean = false;
+  displayMessage: string = '';
+  messageCss: string = '';
   constructor(
     private fb: FormBuilder,
     private httpClient: HttpClient,
-    private router: Router
   ) {
     this.registrationForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -122,6 +122,7 @@ export class RegistrationComponent {
   }
 
   async fetchLocationData() {
+    this.registrationForm.get('email')?.disable();
     const code = this.registrationForm.get('udise')?.value;
     try {
       const initialPayload = {
@@ -132,7 +133,6 @@ export class RegistrationComponent {
           },
         },
       };
-      console.log('environment', environment);
       const headers = new HttpHeaders({
         Authorization: environment.auth,
         'Content-Type': 'application/json',
@@ -143,10 +143,13 @@ export class RegistrationComponent {
         .toPromise();
 
       if (schoolResponse.result.count === 0) {
+        this.showMessage("Invalid UDISE Code", false);
         this.isGenerateOtpEnabled = false;
         this.locationdata = {};
         return;
       } else {
+        this.showInfoMessage = true;
+        this.showMessage("UDISE Data fetched Successfully", true);
         this.isGenerateOtpEnabled = true;
       }
 
@@ -155,6 +158,7 @@ export class RegistrationComponent {
 
       await this.fetchLocationDataRecursively(school.parentId, headers);
     } catch (error) {
+      this.showMessage("Error in fetching location data", false);
       console.error('Error in fetching location data:', error);
     }
   }
@@ -197,6 +201,7 @@ export class RegistrationComponent {
 
     const dob = this.registrationForm.get('dob')?.value; // Get the date value
 
+    console.log("this.locationdata", this.locationdata);
     const profileLocation = [
       this.locationdata.state,
       this.locationdata.district,
@@ -208,15 +213,15 @@ export class RegistrationComponent {
     let userTypes: { type: string; subType: string }[] = [];
     const userRole = this.registrationForm.get('userRole')?.value ?? '';
 
-    if (userRole === 'HT & Official') {
+    if (userRole === 'administrator') {
       this.selectedSubRolesArray.forEach((role) => {
         userTypes.push({
           type: userRole,
-          subType: role,
+          subType: role.toLowerCase()
         });
       });
     } else {
-      if (userRole === 'Youth' || userRole === 'Teacher') {
+      if (userRole === 'youth' || userRole === 'teacher') {
         userTypes.push({
           type: userRole,
           subType: '',
@@ -224,21 +229,21 @@ export class RegistrationComponent {
       }
     }
     return {
-      request: {
-        usercreate: {
+      usercreate: {
+        request: {
           firstName,
           lastName,
-          organisationId: '01406407969375027211',
+          organisationId: '0137236500887961602',
           email: this.registrationForm.get('email')?.value,
           emailVerified: true,
-          userName: firstName.toLowerCase(),
+          userName: `${firstName}_${lastName}`.toLowerCase(),
           password: this.registrationForm.get('password')?.value,
           dob: dob ? dob.split('-')[0] : '', // Extract year from DOB
           roles: ['PUBLIC'],
-        },
-        profileLocation,
-        profileUserTypes: userTypes,
+        }
       },
+      profileLocation,
+      profileUserTypes: userTypes
     };
   }
 
@@ -252,11 +257,14 @@ export class RegistrationComponent {
       .post(environment.API_URLS.SUBMIT_USER_DATA, requestData, { headers })
       .pipe(
         catchError((error) => {
+          this.showMessage("Error" + error, false);
           console.error('Error submitting data:', error);
           throw error;
         })
       )
       .subscribe((response) => {
+        const message = (response as { message: string }).message;
+        this.showMessage(message, true);
         console.log('User data submitted successfully:', response);
         this.resetForm();
       });
@@ -270,20 +278,27 @@ export class RegistrationComponent {
       },
     };
     const headers = new HttpHeaders({
-      Authorization: environment.auth,
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0WEZYTWFVOWFBanpUbk5aSXNySEpyV0hwVW94bzY3NyJ9.WSWVtVh5MCH_yymFEM_qpVzXGdDO5mukrqmIii1C5Ww',
       'Content-Type': 'application/json',
     });
     this.httpClient
       .post(environment.API_URLS.OTP_GENERATE, req, { headers })
       .pipe(
         catchError((error) => {
+          const message = (error as { message: string }).message;
+          this.showMessage(message, false);
           console.error('Error submitting data:', error);
           this.isVerifyOtpEnabled = false;
+          this.registrationForm.get('email')?.enable();
+          this.registrationForm.get('udise')?.enable();
           throw error;
         })
       )
       .subscribe((response) => {
         this.isVerifyOtpEnabled = true;
+        this.registrationForm.get('email')?.disable();
+        this.registrationForm.get('udise')?.disable();
+        this.showMessage("OTP generated successfully", true);
         console.log('OTP generated successfully:', response);
       });
   }
@@ -297,20 +312,24 @@ export class RegistrationComponent {
       },
     };
     const headers = new HttpHeaders({
-      Authorization: environment.auth,
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0WEZYTWFVOWFBanpUbk5aSXNySEpyV0hwVW94bzY3NyJ9.WSWVtVh5MCH_yymFEM_qpVzXGdDO5mukrqmIii1C5Ww',
       'Content-Type': 'application/json',
     });
     this.httpClient
       .post(environment.API_URLS.OTP_VERIFY, req, { headers })
       .pipe(
         catchError((error) => {
-          console.error('Error submitting data:', error);
+          this.showMessage(error.error.params.errmsg, false);
+          console.error('Error submitting data:', error.error.params.errmsg);
           throw error;
         })
       )
       .subscribe((response) => {
         this.isVerifyOtpEnabled = true;
         this.registerButton = true;
+        this.registrationForm.get('email')?.disable();
+        this.registrationForm.get('udise')?.disable();
+        this.showMessage('OTP submitted successfully:', true);
         console.log('OTP submitted successfully:', response);
       });
   }
@@ -326,5 +345,12 @@ export class RegistrationComponent {
     this.otpVerified = false;
     this.isGenerateOtpEnabled = false;
     this.isVerifyOtpEnabled = false;
+    // this.showInfoMessage = false;
+    // this.displayMessage = '';
+  }
+
+  showMessage(message : string, isSuccess: boolean) {
+    this.displayMessage = message;
+    this.messageCss = isSuccess ? 'success-snackbar' : 'error-snackbar'
   }
 }
