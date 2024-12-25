@@ -1,5 +1,4 @@
 <div class="page-container">
-  <!-- First section -->
   <div class="registration-container">
     <h2>Registration Form</h2>
 
@@ -280,17 +279,5 @@
         {{displayMessage}}
       </span>
     </form>
-  </div>
-
-  <!-- Second Section: Display Data -->
-  <div class="data-container">
-    <h3>Location Data</h3>
-    <div *ngIf="locationdata">
-      <p><strong>State Name:</strong> {{ locationdata.state?.name }}</p>
-      <p><strong>District Name:</strong> {{ locationdata.district?.name }}</p>
-      <p><strong>Block Name:</strong> {{ locationdata.block?.name }}</p>
-      <p><strong>Cluster Name:</strong> {{ locationdata.cluster?.name }}</p>
-      <p><strong>School Name:</strong> {{ locationdata.school?.name }}</p>
-    </div>
   </div>
 </div>

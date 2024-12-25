@@ -9,6 +9,8 @@ import {
 } from '@angular/common/http'; // Add HttpClientModule
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { MatDialog } from '@angular/material/dialog';
+import { LocationDataDialogComponent } from '../location-data-dialog/location-data-dialog.component'
 
 @Component({
   selector: 'app-registration',
@@ -76,9 +78,11 @@ export class RegistrationComponent {
   showInfoMessage: boolean = false;
   displayMessage: string = '';
   messageCss: string = '';
+
   constructor(
     private fb: FormBuilder,
     private httpClient: HttpClient,
+    private dialog: MatDialog
   ) {
     this.registrationForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -148,6 +152,7 @@ export class RegistrationComponent {
         this.locationdata = {};
         return;
       } else {
+        this.openDialogForLocation();
         this.showInfoMessage = true;
         this.showMessage("UDISE Data fetched Successfully", true);
         this.isGenerateOtpEnabled = true;
@@ -352,5 +357,13 @@ export class RegistrationComponent {
   showMessage(message : string, isSuccess: boolean) {
     this.displayMessage = message;
     this.messageCss = isSuccess ? 'success-snackbar' : 'error-snackbar'
+  }
+
+  openDialogForLocation() {
+    this.dialog.open(LocationDataDialogComponent, {
+      width: '400px',
+      height: '300px',
+      data: this.locationdata
+    });
   }
 }

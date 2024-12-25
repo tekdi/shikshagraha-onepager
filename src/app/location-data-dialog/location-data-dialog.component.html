@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>Location Data</h2>
+<mat-dialog-content class="mat-typography">
+    <div *ngIf="locationData">
+      <p><strong>State Name:</strong> {{ locationData.state?.name }}</p>
+      <p><strong>District Name:</strong> {{ locationData.district?.name }}</p>
+      <p><strong>Block Name:</strong> {{ locationData.block?.name }}</p>
+      <p><strong>Cluster Name:</strong> {{ locationData.cluster?.name }}</p>
+      <p><strong>School Name:</strong> {{ locationData.school?.name }}</p>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>OK</button>
+</mat-dialog-actions>
