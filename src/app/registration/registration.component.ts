@@ -278,7 +278,7 @@ export class RegistrationComponent {
       },
     };
     const headers = new HttpHeaders({
-      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0WEZYTWFVOWFBanpUbk5aSXNySEpyV0hwVW94bzY3NyJ9.WSWVtVh5MCH_yymFEM_qpVzXGdDO5mukrqmIii1C5Ww',
+      Authorization: environment.prod_auth,
       'Content-Type': 'application/json',
     });
     this.httpClient
@@ -312,7 +312,7 @@ export class RegistrationComponent {
       },
     };
     const headers = new HttpHeaders({
-      Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0WEZYTWFVOWFBanpUbk5aSXNySEpyV0hwVW94bzY3NyJ9.WSWVtVh5MCH_yymFEM_qpVzXGdDO5mukrqmIii1C5Ww',
+      Authorization: environment.prod_auth,
       'Content-Type': 'application/json',
     });
     this.httpClient
