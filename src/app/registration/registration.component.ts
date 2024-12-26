@@ -82,6 +82,7 @@ export class RegistrationComponent {
   isVerifyOtpEnabled: boolean = false;
   registerButton: boolean = false;
   userName: string = '';
+  hasSelectedSubRole: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -114,8 +115,10 @@ export class RegistrationComponent {
   onUserRoleChange(): void {
     const userRole = this.registrationForm.get('userRole')?.value;
     if (userRole === 'administrator') {
+      this.isHTOfficialRoleSelected = true;
       this.isSubRoleEnabled = true; // Enable Sub User Roles if "HT & Official" is selected
     } else {
+      this.isHTOfficialRoleSelected = false;
       this.isSubRoleEnabled = false; // Hide Sub User Roles for other user roles
       this.selectedSubRolesArray = []; // Clear selected sub roles when hiding the checkboxes
     }
@@ -124,16 +127,24 @@ export class RegistrationComponent {
   getSelectedSubRoles() {
     this.selectedSubRolesArray =
       this.registrationForm.get('subUserRole')?.value ?? [];
+      if (this.selectedSubRolesArray.length > 0) {
+        this.hasSelectedSubRole = true;
+      }
+      else {
+        this.hasSelectedSubRole = false;
+      }
+      console.log("isHTOfficialRoleSelected", this.isHTOfficialRoleSelected);
+      console.log("hasSelectedSubRole", this.hasSelectedSubRole);
   }
 
-  get hasSelectedSubRole(): boolean {
-    if (this.selectedSubRolesArray.length > 0) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
+  // get hasSelectedSubRole(): boolean {
+  //   if (this.selectedSubRolesArray.length > 0) {
+  //     return true;
+  //   }
+  //   else {
+  //     return false;
+  //   }
+  // }
 
   async fetchLocationData() {
     this.registrationForm.get('email')?.disable();
@@ -353,6 +364,7 @@ export class RegistrationComponent {
     this.registrationForm.get('email')?.enable();
     this.registrationForm.get('udise')?.enable();
     this.registerButton = false;
+    this.hasSelectedSubRole = false;
   }
 
   showMessage(message : string, cssStyle: string) {

@@ -160,19 +160,17 @@
       <div *ngIf="isSubRoleEnabled">
         <div class="sub-role-container">
           <label>Select Sub User Role</label>
-
-          <mat-select formControlName="subUserRole" multiple (change)="getSelectedSubRoles()">
-            @for (role of officialRoles; track role) {
-              <mat-option [value]="role">{{role}}</mat-option>
-            }
+      
+          <mat-select formControlName="subUserRole" multiple (selectionChange)="getSelectedSubRoles()">
+            <mat-option *ngFor="let role of officialRoles" [value]="role">{{ role }}</mat-option>
           </mat-select>
         </div>
-
+      
         <!-- Validation message if no sub-role is selected -->
         <div *ngIf="isHTOfficialRoleSelected && !hasSelectedSubRole">
-          <small class="error"
-            >Please select at least one sub-role for HT & Official.</small
-          >
+          <small class="error">
+            Please select at least one sub-role for HT & Official.
+          </small>
         </div>
       </div>
 
@@ -196,7 +194,8 @@
               otpGenerated ||
               otpVerified ||
               isVerifyOtpEnabled ||
-              registrationForm.invalid || (isHTOfficialRoleSelected && hasSelectedSubRole)
+              registrationForm.invalid ||
+              !hasSelectedSubRole
             "
           >
             Verify
