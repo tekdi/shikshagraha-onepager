@@ -1,4 +1,8 @@
 /* General Reset */
+:root {
+  --primary-color: #FF9911;
+  --accent-color: #572E91;
+}
 * {
   margin: 0;
   padding: 0;
@@ -246,7 +250,10 @@ button[type="submit"]:disabled {
   color: white !important;
 }
 
-::ng-deep div.mat-mdc-select-panel {
-  width: 100%;
-  max-height: 130px;
+::ng-deep .mat-mdc-select-panel {
+  max-height: 125px !important;
+}
+
+.reset-form-container {
+  text-align: right;
 }
