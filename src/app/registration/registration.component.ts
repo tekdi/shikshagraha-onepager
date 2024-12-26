@@ -12,6 +12,9 @@ import { environment } from '../../environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { LocationDataDialogComponent } from '../location-data-dialog/location-data-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+
 
 @Component({
   selector: 'app-registration',
@@ -20,6 +23,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    MatFormFieldModule,
+    MatSelectModule,
     HttpClientModule, // Import HttpClientModule here
   ],
   templateUrl: './registration.component.html',
@@ -107,7 +112,7 @@ export class RegistrationComponent {
   // This method is triggered when the userRole is changed
   onUserRoleChange(): void {
     const userRole = this.registrationForm.get('userRole')?.value;
-    if (userRole === 'HT & Official') {
+    if (userRole === 'administrator') {
       this.isSubRoleEnabled = true; // Enable Sub User Roles if "HT & Official" is selected
     } else {
       this.isSubRoleEnabled = false; // Hide Sub User Roles for other user roles
@@ -350,9 +355,20 @@ export class RegistrationComponent {
     this.isVerifyOtpEnabled = false;
   }
 
+  // newRegistration() {
+  //   const snackBarRef = this.snackBar.open('Registration Successful!', 'New Registration', {
+  //     duration: 3000,
+  //     panelClass: ['success-snackbar'],
+  //   });
+
+  //   snackBarRef.onAction().subscribe(() => {
+  //     this.resetForm();
+  //   });
+  // }
+
   showMessage(message : string, cssStyle: string) {
     this.snackBar.open(message, 'Close', {
-      duration: 3000,
+      duration: 3000, 
       panelClass: [cssStyle]
     });
   }

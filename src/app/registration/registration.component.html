@@ -161,16 +161,11 @@
         <div class="sub-role-container">
           <label>Select Sub User Role</label>
 
-          <select
-            multiple
-            formControlName="subUserRole"
-            class="multi-select-dropdown"
-            (change)="getSelectedSubRoles()"
-          >
-            <option *ngFor="let role of officialRoles" [value]="role">
-              {{ role }}
-            </option>
-          </select>
+          <mat-select formControlName="subUserRole" multiple (change)="getSelectedSubRoles()">
+            @for (role of officialRoles; track role) {
+              <mat-option [value]="role">{{role}}</mat-option>
+            }
+          </mat-select>
         </div>
 
         <!-- Validation message if no sub-role is selected -->
