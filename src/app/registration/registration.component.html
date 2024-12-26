@@ -195,7 +195,7 @@
               otpVerified ||
               isVerifyOtpEnabled ||
               registrationForm.invalid ||
-              !hasSelectedSubRole
+              (isHTOfficialRoleSelected && !hasSelectedSubRole)
             "
           >
             Verify
