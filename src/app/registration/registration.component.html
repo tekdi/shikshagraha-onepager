@@ -196,7 +196,7 @@
               otpGenerated ||
               otpVerified ||
               isVerifyOtpEnabled ||
-              registrationForm.invalid
+              registrationForm.invalid || (isHTOfficialRoleSelected && hasSelectedSubRole)
             "
           >
             Verify
