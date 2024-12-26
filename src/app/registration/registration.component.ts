@@ -76,9 +76,6 @@ export class RegistrationComponent {
   isGenerateOtpEnabled: boolean = false;
   isVerifyOtpEnabled: boolean = false;
   registerButton: boolean = false;
-  showInfoMessage: boolean = false;
-  displayMessage: string = '';
-  messageCss: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -154,14 +151,13 @@ export class RegistrationComponent {
         this.locationdata = {};
         return;
       } else {
-        this.openDialogForLocation();
-        this.showInfoMessage = true;
         this.showMessage("UDISE Data fetched Successfully", 'success-snackbar');
         this.isGenerateOtpEnabled = true;
       }
 
       const school = schoolResponse.result.response[0];
       this.locationdata = { school };
+      this.openDialogForLocation();
 
       await this.fetchLocationDataRecursively(school.parentId, headers);
     } catch (error) {
@@ -352,13 +348,11 @@ export class RegistrationComponent {
     this.otpVerified = false;
     this.isGenerateOtpEnabled = false;
     this.isVerifyOtpEnabled = false;
-    // this.showInfoMessage = false;
-    // this.displayMessage = '';
   }
 
   showMessage(message : string, cssStyle: string) {
     this.snackBar.open(message, 'Close', {
-      duration: 3000, // Snackbar will auto-close after 5 seconds
+      duration: 3000,
       panelClass: [cssStyle]
     });
   }
