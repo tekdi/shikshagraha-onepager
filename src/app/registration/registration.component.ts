@@ -127,7 +127,12 @@ export class RegistrationComponent {
   }
 
   get hasSelectedSubRole(): boolean {
-    return this.selectedSubRolesArray.length > 0;
+    if (this.selectedSubRolesArray.length > 0) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   async fetchLocationData() {
@@ -142,16 +147,12 @@ export class RegistrationComponent {
           },
         },
       };
-      const headers = new HttpHeaders({
-        Authorization: environment.auth,
-        'Content-Type': 'application/json',
-      });
-
+  
       const schoolResponse: any = await this.httpClient
-        .post(environment.API_URLS.SEARCH_LOCATION, initialPayload, { headers })
+        .post(environment.API_URLS.SEARCH_LOCATION, initialPayload)
         .toPromise();
-
-      if (schoolResponse.result.count === 0) {
+  
+      if (schoolResponse.data.result.count === 0) {
         this.showMessage("Invalid UDISE Code", 'error-snackbar');
         this.isGenerateOtpEnabled = false;
         this.locationdata = {};
@@ -160,19 +161,19 @@ export class RegistrationComponent {
         this.showMessage("UDISE Data fetched Successfully", 'success-snackbar');
         this.isGenerateOtpEnabled = true;
       }
-
-      const school = schoolResponse.result.response[0];
+      const school = schoolResponse.data.result.response[0];
       this.locationdata = { school };
       this.openDialogForLocation();
-
-      await this.fetchLocationDataRecursively(school.parentId, headers);
+  
+      await this.fetchLocationDataRecursively(school.parentId);
     } catch (error) {
+      console.log("error on fetching location data", error)
       this.showMessage("Error in fetching location data", 'error-snackbar');
       console.error('Error in fetching location data:', error);
     }
   }
-
-  async fetchLocationDataRecursively(parentId: string, headers: HttpHeaders) {
+  
+  async fetchLocationDataRecursively(parentId: string) {
     if (!parentId) return;
 
     const payload = {
@@ -182,26 +183,22 @@ export class RegistrationComponent {
     };
 
     const response: any = await this.httpClient
-      .post(environment.API_URLS.SEARCH_LOCATION, payload, { headers })
+      .post(environment.API_URLS.SEARCH_LOCATION, payload)
       .toPromise();
 
-    const location = response.result.response[0];
+    const location = response.data.result.response[0];
     if (location.type === 'cluster') this.locationdata.cluster = location;
     else if (location.type === 'block') this.locationdata.block = location;
     else if (location.type === 'district')
       this.locationdata.district = location;
     else if (location.type === 'state') this.locationdata.state = location;
 
-    await this.fetchLocationDataRecursively(location.parentId, headers);
+    await this.fetchLocationDataRecursively(location.parentId);
   }
 
   onSubmit() {
     const requestData = this.prepareRequestData();
     this.submitData(requestData);
-    // this.fetchLocationData().then(() => {
-    //   const requestData = this.prepareRequestData();
-    //   this.submitData(requestData);
-    // });
   }
 
   prepareRequestData() {
@@ -233,6 +230,7 @@ export class RegistrationComponent {
     const userRole = this.registrationForm.get('userRole')?.value ?? '';
 
     if (userRole === 'administrator') {
+      this.isHTOfficialRoleSelected = true;
       this.selectedSubRolesArray.forEach((role) => {
         userTypes.push({
           type: userRole,
@@ -240,6 +238,7 @@ export class RegistrationComponent {
         });
       });
     } else {
+      this.isHTOfficialRoleSelected = false;
       if (userRole === 'youth' || userRole === 'teacher') {
         userTypes.push({
           type: userRole,
@@ -267,25 +266,19 @@ export class RegistrationComponent {
   }
 
   submitData(requestData: any) {
-    const headers = new HttpHeaders({
-      Authorization: environment.auth,
-      'Content-Type': 'application/json',
-    });
-
     this.httpClient
-      .post(environment.API_URLS.SUBMIT_USER_DATA, requestData, { headers })
+      .post(environment.API_URLS.SUBMIT_USER_DATA, requestData)
       .pipe(
         catchError((error) => {
-          this.showMessage("Error" + error, 'error-snackbar');
+          console.log("error on submiting registration data", error)
+          this.showMessage("Error" + error.message, 'error-snackbar');
           console.error('Error submitting data:', error);
           throw error;
         })
       )
       .subscribe((response) => {
         this.onRegister();
-        // const message = (response as { message: string }).message;
-        // this.showMessage("User '" + this.userName + "' created successfully", 'success-snackbar');
-        console.log('User data submitted successfully:', response);
+        console.log('User data submitted successfully', response);
       });
   }
 
@@ -296,14 +289,11 @@ export class RegistrationComponent {
         type: 'email',
       },
     };
-    const headers = new HttpHeaders({
-      Authorization: environment.prod_auth,
-      'Content-Type': 'application/json',
-    });
     this.httpClient
-      .post(environment.API_URLS.OTP_GENERATE, req, { headers })
+      .post(environment.API_URLS.OTP_GENERATE, req)
       .pipe(
         catchError((error) => {
+          console.log("error on generating data", error)
           const message = (error as { message: string }).message;
           this.showMessage(message, 'error-snackbar');
           console.error('Error submitting data:', error);
@@ -330,16 +320,12 @@ export class RegistrationComponent {
         otp: String(this.registrationForm.get('otp')?.value ?? ''),
       },
     };
-    const headers = new HttpHeaders({
-      Authorization: environment.prod_auth,
-      'Content-Type': 'application/json',
-    });
     this.httpClient
-      .post(environment.API_URLS.OTP_VERIFY, req, { headers })
+      .post(environment.API_URLS.OTP_VERIFY, req,)
       .pipe(
         catchError((error) => {
-          this.showMessage(error.error.params.errmsg, 'error-snackbar');
-          console.error('Error submitting data:', error.error.params.errmsg);
+          this.showMessage(error.error.error.params.errmsg, 'error-snackbar');
+          console.error('Error submitting data:', error);
           throw error;
         })
       )
