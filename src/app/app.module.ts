@@ -11,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
+import { RegistrationSuccessfulComponent } from './registration-successful/registration-successful.component';
 
 @NgModule({
   declarations: [],
@@ -26,7 +27,8 @@ import { MatInputModule } from '@angular/material/input';
     MatSelectModule,
     MatOptionModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    RegistrationSuccessfulComponent
   ],
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

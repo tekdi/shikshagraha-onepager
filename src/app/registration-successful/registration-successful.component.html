@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>Registration Successful !!</h2>
+<mat-dialog-content class="mat-typography">
+    <p>Your account has been created with User Name <b>{{data}}</b>. You can now enjoy the features of Shikshagrah!</p>
+
+    <!-- App Name with Link to Google Play Store -->
+    <p><strong>You can download the app from here </strong>
+        <a href="https://play.google.com/store/apps/details?id=org.shikshagraha.app&hl=en_IN" target="_blank">Shikshagrah</a>
+    </p>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Return</button>
+</mat-dialog-actions>

@@ -14,7 +14,7 @@ import { LocationDataDialogComponent } from '../location-data-dialog/location-da
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-
+import { RegistrationSuccessfulComponent } from '../registration-successful/registration-successful.component';
 
 @Component({
   selector: 'app-registration',
@@ -87,7 +87,7 @@ export class RegistrationComponent {
     private fb: FormBuilder,
     private httpClient: HttpClient,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) {
     this.registrationForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -282,8 +282,9 @@ export class RegistrationComponent {
         })
       )
       .subscribe((response) => {
-        const message = (response as { message: string }).message;
-        this.showMessage("User '" + this.userName + "' created successfully", 'success-snackbar');
+        this.onRegister();
+        // const message = (response as { message: string }).message;
+        // this.showMessage("User '" + this.userName + "' created successfully", 'success-snackbar');
         console.log('User data submitted successfully:', response);
       });
   }
@@ -380,6 +381,17 @@ export class RegistrationComponent {
       width: '400px',
       height: '300px',
       data: this.locationdata
+    });
+  }
+
+  onRegister() {
+    const dialogRef = this.dialog.open(RegistrationSuccessfulComponent, {
+      width: '400px',
+      height: '300px',
+      data: this.userName
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      this.resetForm();
     });
   }
 }
