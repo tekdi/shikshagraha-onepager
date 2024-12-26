@@ -81,6 +81,7 @@ export class RegistrationComponent {
   isGenerateOtpEnabled: boolean = false;
   isVerifyOtpEnabled: boolean = false;
   registerButton: boolean = false;
+  userName: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -195,18 +196,28 @@ export class RegistrationComponent {
   }
 
   onSubmit() {
-    this.fetchLocationData().then(() => {
-      const requestData = this.prepareRequestData();
-      this.submitData(requestData);
-    });
+    const requestData = this.prepareRequestData();
+    this.submitData(requestData);
+    // this.fetchLocationData().then(() => {
+    //   const requestData = this.prepareRequestData();
+    //   this.submitData(requestData);
+    // });
   }
 
   prepareRequestData() {
-    const name = this.registrationForm.get('name')?.value || ''; // Default to an empty string if 'name' is null/undefined
+    const name = this.registrationForm.get('name')?.value || '';
     const nameParts = name.split(' ');
     const firstName = nameParts[0] || '';
     const lastName = nameParts.slice(1).join(' ') || '';
 
+    const firstNameLower = firstName.toLowerCase();
+
+    const lastNameParts = lastName.split(' ');
+    const lastNameLower = lastNameParts
+      .map(part => part.charAt(0).toLowerCase() + part.slice(1).toLowerCase())
+      .join('');
+
+    this.userName =  `${firstNameLower}_${lastNameLower}`;
     const dob = this.registrationForm.get('dob')?.value; // Get the date value
 
     console.log("this.locationdata", this.locationdata);
@@ -244,9 +255,9 @@ export class RegistrationComponent {
           organisationId: '0137236500887961602',
           email: this.registrationForm.get('email')?.value,
           emailVerified: true,
-          userName: `${firstName}_${lastName}`.toLowerCase(),
+          userName: this.userName,
           password: this.registrationForm.get('password')?.value,
-          dob: dob ? dob.split('-')[0] : '', // Extract year from DOB
+          dob: dob ? dob.split('-')[0] : '',
           roles: ['PUBLIC'],
         }
       },
@@ -272,9 +283,8 @@ export class RegistrationComponent {
       )
       .subscribe((response) => {
         const message = (response as { message: string }).message;
-        this.showMessage(message, 'success-snackbar');
+        this.showMessage("User '" + this.userName + "' created successfully", 'success-snackbar');
         console.log('User data submitted successfully:', response);
-        this.resetForm();
       });
   }
 
@@ -353,22 +363,14 @@ export class RegistrationComponent {
     this.otpVerified = false;
     this.isGenerateOtpEnabled = false;
     this.isVerifyOtpEnabled = false;
+    this.registrationForm.get('email')?.enable();
+    this.registrationForm.get('udise')?.enable();
+    this.registerButton = false;
   }
-
-  // newRegistration() {
-  //   const snackBarRef = this.snackBar.open('Registration Successful!', 'New Registration', {
-  //     duration: 3000,
-  //     panelClass: ['success-snackbar'],
-  //   });
-
-  //   snackBarRef.onAction().subscribe(() => {
-  //     this.resetForm();
-  //   });
-  // }
 
   showMessage(message : string, cssStyle: string) {
     this.snackBar.open(message, 'Close', {
-      duration: 3000, 
+      duration: 6000, 
       panelClass: [cssStyle]
     });
   }
