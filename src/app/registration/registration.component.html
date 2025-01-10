@@ -179,7 +179,7 @@
         <label for="udise">UDISE Code</label>
         <div class="input-button-container">
           <input
-            type="number"
+            type="text"
             id="udise"
             name="udise"
             formControlName="udise"
@@ -242,6 +242,7 @@
             class="btn btn-primary btn-sm"
             (click)="verifyOTP()"
             style="width: 100px"
+            [disabled]="isGenerateOtpEnabled && isVerifyOtpEnabled && registrationComplete"
           >
             Verify OTP
           </button>

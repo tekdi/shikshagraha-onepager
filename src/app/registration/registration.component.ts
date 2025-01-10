@@ -83,6 +83,7 @@ export class RegistrationComponent {
   registerButton: boolean = false;
   userName: string = '';
   hasSelectedSubRole: boolean = false;
+  registrationComplete: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -318,7 +319,7 @@ export class RegistrationComponent {
         this.isVerifyOtpEnabled = true;
         this.registrationForm.get('email')?.disable();
         this.registrationForm.get('udise')?.disable();
-        this.showMessage("OTP generated successfully", 'success-snackbar');
+        this.showMessage("OTP sent successfully", 'success-snackbar');
         console.log('OTP generated successfully:', response);
       });
   }
@@ -345,7 +346,7 @@ export class RegistrationComponent {
         this.registerButton = true;
         this.registrationForm.get('email')?.disable();
         this.registrationForm.get('udise')?.disable();
-        this.showMessage('OTP submitted successfully', 'success-snackbar');
+        this.showMessage('OTP verified successfully', 'success-snackbar');
         console.log('OTP submitted successfully:', response);
       });
   }
@@ -383,6 +384,7 @@ export class RegistrationComponent {
   }
 
   onRegister() {
+    this.registrationComplete = true;
     const dialogRef = this.dialog.open(RegistrationSuccessfulComponent, {
       width: '400px',
       height: '300px',
