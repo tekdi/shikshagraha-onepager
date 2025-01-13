@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -109,7 +109,16 @@ export class RegistrationComponent {
       subUserRole: [[]],
       udise: ['', [Validators.required]],
       otp: [''],
-    });
+      confirmPassword: ['', [Validators.required]],
+    },
+    { validator: this.passwordsMatchValidator }
+    );
+  }
+
+  passwordsMatchValidator(group: FormGroup) {
+    const password = group.get('password')?.value;
+    const confirmPassword = group.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { passwordsMismatch: true };
   }
 
   // This method is triggered when the userRole is changed
@@ -137,15 +146,6 @@ export class RegistrationComponent {
       console.log("isHTOfficialRoleSelected", this.isHTOfficialRoleSelected);
       console.log("hasSelectedSubRole", this.hasSelectedSubRole);
   }
-
-  // get hasSelectedSubRole(): boolean {
-  //   if (this.selectedSubRolesArray.length > 0) {
-  //     return true;
-  //   }
-  //   else {
-  //     return false;
-  //   }
-  // }
 
   async fetchLocationData() {
     this.registrationForm.get('email')?.disable();
@@ -223,7 +223,7 @@ export class RegistrationComponent {
 
     const lastNameParts = lastName.split(' ');
     const lastNameLower = lastNameParts
-      .map(part => part.charAt(0).toLowerCase() + part.slice(1).toLowerCase())
+      .map((part: string) => part.charAt(0).toLowerCase() + part.slice(1).toLowerCase())
       .join('');
 
     this.userName =  `${firstNameLower}_${lastNameLower}`;

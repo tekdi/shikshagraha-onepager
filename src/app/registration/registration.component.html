@@ -125,6 +125,26 @@
           </small>
         </div>
       </div>
+      
+      <!-- Confirm Password -->
+      <div>
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          [type]="passwordVisible ? 'text' : 'password'"
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          required
+        />
+        <small
+          class="error"
+          *ngIf="
+            registrationForm.get('confirmPassword')?.touched &&
+            registrationForm.hasError('passwordsMismatch')
+          "
+        >
+          Passwords do not match.
+        </small>
+      </div>
 
       <!-- User Role Field -->
       <div>
