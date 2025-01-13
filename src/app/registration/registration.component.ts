@@ -15,6 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { RegistrationSuccessfulComponent } from '../registration-successful/registration-successful.component';
+import { env } from 'node:process';
 
 @Component({
   selector: 'app-registration',
@@ -263,7 +264,7 @@ export class RegistrationComponent {
         request: {
           firstName,
           lastName,
-          organisationId: '0137236500887961602',
+          organisationId: environment.ORG_ID,
           email: this.registrationForm.get('email')?.value,
           emailVerified: true,
           userName: this.userName,
