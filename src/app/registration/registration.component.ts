@@ -284,7 +284,8 @@ export class RegistrationComponent {
       .pipe(
         catchError((error) => {
           console.log("error on submiting registration data", error)
-          this.showMessage("Error" + error.message, 'error-snackbar');
+          const errorMessage = error?.error?.error?.params?.errmsg || 'An unknown error occurred';
+          this.showMessage(error.error.message + " !! " + errorMessage, 'error-snackbar');
           console.error('Error submitting data:', error);
           throw error;
         })
@@ -307,8 +308,8 @@ export class RegistrationComponent {
       .pipe(
         catchError((error) => {
           console.log("error on generating data", error)
-          const message = (error as { message: string }).message;
-          this.showMessage(message, 'error-snackbar');
+          const errorMessage = error?.error?.error?.params?.errmsg || 'An unknown error occurred';
+          this.showMessage(error.error.message + " " + errorMessage, 'error-snackbar');
           console.error('Error submitting data:', error);
           this.isVerifyOtpEnabled = false;
           this.registrationForm.get('email')?.enable();
@@ -337,7 +338,8 @@ export class RegistrationComponent {
       .post(environment.API_URLS.OTP_VERIFY, req,)
       .pipe(
         catchError((error) => {
-          this.showMessage(error.error.error.params.errmsg, 'error-snackbar');
+          const errorMessage = error?.error?.error?.params?.errmsg || 'An unknown error occurred';
+          this.showMessage("Invalid OTP !!! " + errorMessage, 'error-snackbar');
           console.error('Error submitting data:', error);
           throw error;
         })
