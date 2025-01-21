@@ -71,10 +71,10 @@
           </small>
           <small
             class="error"
-            *ngIf="registrationForm.get('email')?.errors?.['email']"
+            *ngIf="registrationForm.get('email')?.errors?.['pattern']"
           >
-            Invalid email format.
-          </small>
+            Invalid email format. Ensure it includes a valid domain.
+        </small>
         </div>
       </div>
 
@@ -114,14 +114,13 @@
             class="error"
             *ngIf="registrationForm.get('password')?.errors?.['minlength']"
           >
-            Password must be at least 8 characters long.
+            Your password must contain a minimum of 8 characters.
           </small>
           <small
             class="error"
             *ngIf="registrationForm.get('password')?.errors?.['pattern']"
           >
-            Password must contain uppercase, lowercase, number, and special
-            character.
+            It must include numerals, lower and upper case alphabets, and special characters, without any spaces.
           </small>
         </div>
       </div>
