@@ -240,10 +240,26 @@
         <button
           (click)="generateOTP()"
           style="margin-bottom: 10px"
-          [disabled]="isVerifyOtpEnabled || registrationForm.invalid"
+          [disabled]="isVerifyOtpEnabled || registrationForm.invalid || isOTPGenerated"
         >
           Generate OTP
         </button>
+      </div>
+
+      <!-- RESEND otp -->
+      <div *ngIf="isGenerateOtpEnabled">
+        <p>Didn't receive the OTP?
+          <a
+          href="#"
+          (click)="generateOTP()"
+          [class.disabled-link]="!isResentOTPButtonEnabled"
+          [attr.aria-disabled]="!isResentOTPButtonEnabled ? 'true' : null"
+          style="text-decoration: none; color: blue; cursor: pointer; margin-bottom: 10px;"
+          [style.pointerEvents]="!isResentOTPButtonEnabled ? 'none' : 'auto'"
+        >
+          Resend OTP
+        </a>  
+          in {{ countdown }} seconds.</p>
       </div>
 
       <!-- Verify otp -->

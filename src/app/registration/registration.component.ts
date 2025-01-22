@@ -85,6 +85,9 @@ export class RegistrationComponent {
   userName: string = '';
   hasSelectedSubRole: boolean = false;
   registrationComplete: boolean = false;
+  countdown: number = 0;
+  isResentOTPButtonEnabled: boolean = false;
+  isOTPGenerated: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -329,7 +332,22 @@ export class RegistrationComponent {
         this.registrationForm.get('udise')?.disable();
         this.showMessage("OTP sent successfully", 'success-snackbar');
         console.log('OTP generated successfully:', response);
+        this.isResentOTPButtonEnabled = false;
+        this.startCountdown(60);
       });
+  }
+
+  startCountdown(seconds: number) {
+    this.isOTPGenerated = true;
+    this.countdown = seconds;
+
+    const timer = setInterval(() => {
+      this.countdown--;
+      if (this.countdown <= 0) {
+        clearInterval(timer);
+        this.isResentOTPButtonEnabled = true;
+      }
+    }, 1000);
   }
 
   verifyOTP() {
@@ -356,6 +374,7 @@ export class RegistrationComponent {
         this.registrationForm.get('email')?.disable();
         this.registrationForm.get('udise')?.disable();
         this.showMessage('OTP verified successfully', 'success-snackbar');
+        this.isResentOTPButtonEnabled = false;
         console.log('OTP submitted successfully:', response);
       });
   }
