@@ -361,20 +361,7 @@ export class RegistrationComponent {
   }
 
   resetForm() {
-    this.registrationForm.reset();
-    this.passwordVisible = false;
-    this.isSubRoleEnabled = false;
-    this.locationdata = {};
-    this.isHTOfficialRoleSelected = false;
-    this.selectedSubRolesArray = [];
-    this.otpGenerated = false;
-    this.otpVerified = false;
-    this.isGenerateOtpEnabled = false;
-    this.isVerifyOtpEnabled = false;
-    this.registrationForm.get('email')?.enable();
-    this.registrationForm.get('udise')?.enable();
-    this.registerButton = false;
-    this.hasSelectedSubRole = false;
+    window.location.reload();
   }
 
   showMessage(message : string, cssStyle: string) {
@@ -400,7 +387,7 @@ export class RegistrationComponent {
       data: this.userName
     });
     dialogRef.afterClosed().subscribe(() => {
-      this.resetForm();
+      window.location.reload();
     });
   }
 }
