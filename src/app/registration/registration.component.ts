@@ -90,6 +90,7 @@ export class RegistrationComponent {
   isOTPGenerated: boolean = false;
   otpAttemptCount: number = 0; // Counter to track the number of OTP generation attempts
   maxOtpAttempts: number = 3; // Maximum allowed OTP generation attempts
+  isOTPVerified: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -375,12 +376,13 @@ generateOTP() {
       .pipe(
         catchError((error) => {
           const errorMessage = error?.error?.error?.params?.errmsg || 'An unknown error occurred';
-          this.showMessage("Invalid OTP !!! " + errorMessage, 'error-snackbar');
+          this.showMessage(errorMessage, 'error-snackbar');
           console.error('Error submitting data:', error);
           throw error;
         })
       )
       .subscribe((response) => {
+        this.isOTPVerified = true;
         this.isVerifyOtpEnabled = true;
         this.registerButton = true;
         this.registrationForm.get('email')?.disable();
