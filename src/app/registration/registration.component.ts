@@ -88,6 +88,8 @@ export class RegistrationComponent {
   countdown: number = 0;
   isResentOTPButtonEnabled: boolean = false;
   isOTPGenerated: boolean = false;
+  otpAttemptCount: number = 0; // Counter to track the number of OTP generation attempts
+  maxOtpAttempts: number = 3; // Maximum allowed OTP generation attempts
 
   constructor(
     private fb: FormBuilder,
@@ -305,37 +307,47 @@ export class RegistrationComponent {
       });
   }
 
-  generateOTP() {
-    let req = {
-      request: {
-        key: this.registrationForm.get('email')?.value ?? '',
-        type: 'email',
-      },
-    };
-    this.httpClient
-      .post(environment.API_URLS.OTP_GENERATE, req)
-      .pipe(
-        catchError((error) => {
-          console.log("error on generating data", error)
-          const errorMessage = error?.error?.error?.params?.errmsg || 'An unknown error occurred';
-          this.showMessage(error.error.message + " " + errorMessage, 'error-snackbar');
-          console.error('Error submitting data:', error);
-          this.isVerifyOtpEnabled = false;
-          this.registrationForm.get('email')?.enable();
-          this.registrationForm.get('udise')?.enable();
-          throw error;
-        })
-      )
-      .subscribe((response) => {
-        this.isVerifyOtpEnabled = true;
-        this.registrationForm.get('email')?.disable();
-        this.registrationForm.get('udise')?.disable();
-        this.showMessage("OTP sent successfully", 'success-snackbar');
-        console.log('OTP generated successfully:', response);
-        this.isResentOTPButtonEnabled = false;
-        this.startCountdown(60);
-      });
+generateOTP() {
+  this.otpAttemptCount++;
+
+  if (this.otpAttemptCount > this.maxOtpAttempts) {
+    this.isResentOTPButtonEnabled = false;
+    this.showMessage('You have exceeded the maximum number of OTP generation attempts.', 'error-snackbar');
+    return;
   }
+
+  let req = {
+    request: {
+      key: this.registrationForm.get('email')?.value ?? '',
+      type: 'email',
+    },
+  };
+
+  this.httpClient
+    .post(environment.API_URLS.OTP_GENERATE, req)
+    .pipe(
+      catchError((error) => {
+        console.log("Error on generating OTP:", error);
+        const errorMessage = error?.error?.error?.params?.errmsg || 'An unknown error occurred';
+        this.showMessage(error.error.message + " " + errorMessage, 'error-snackbar');
+        console.error('Error submitting data:', error);
+        this.isVerifyOtpEnabled = false;
+        this.registrationForm.get('email')?.enable();
+        this.registrationForm.get('udise')?.enable();
+        throw error;
+      })
+    )
+    .subscribe((response) => {
+      this.isVerifyOtpEnabled = true;
+      this.registrationForm.get('email')?.disable();
+      this.registrationForm.get('udise')?.disable();
+      this.showMessage("OTP sent successfully", 'success-snackbar');
+      console.log('OTP generated successfully:', response);
+
+      this.isResentOTPButtonEnabled = false;
+      this.startCountdown(60);
+    });
+}
 
   startCountdown(seconds: number) {
     this.isOTPGenerated = true;
